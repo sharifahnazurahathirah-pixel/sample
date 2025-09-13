@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game: Kepelbagaian Iklim di Asia</title>
+<title>Game Interaktif: Kepelbagaian Iklim di Asia</title>
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -25,35 +25,38 @@ h1 { color: #2c3e50; }
 }
 .hotspot {
   position: absolute;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   background: rgba(231, 76, 60, 0.8);
   border-radius: 50%;
   cursor: pointer;
   transform: translate(-50%, -50%);
   border: 2px solid white;
+  transition: transform 0.3s;
 }
-.hotspot:hover { background: #c0392b; }
+.hotspot:hover { transform: translate(-50%, -50%) scale(1.2); background: #c0392b; }
 .popup {
   position: fixed;
   top: 50%; left: 50%;
   transform: translate(-50%,-50%);
-  background: white;
+  background: #fff9c4;
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  max-width: 300px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  max-width: 320px;
   display: none;
   z-index: 10;
+  animation: fadeIn 0.5s ease-in-out;
 }
-.popup h2 { margin-top: 0; color: #2980b9; }
+.popup h2 { margin-top: 0; color: #f57c00; }
+.popup p { font-size: 16px; }
 .close-btn {
   margin-top: 15px;
-  padding: 8px 14px;
-  background: #3498db;
+  padding: 10px 16px;
+  background: #f57c00;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
 }
 .overlay {
@@ -64,17 +67,22 @@ h1 { color: #2c3e50; }
   display: none;
   z-index: 5;
 }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -45%) scale(0.8); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
 </style>
 </head>
 <body>
 
 <h1>Game: Kepelbagaian Iklim di Asia</h1>
-<p>Klik kawasan hotspot pada peta untuk mengetahui iklim di Asia 🌏</p>
+<p>Klik hotspot pada peta untuk mengetahui iklim di Asia 🌏</p>
 
 <div class="map-container">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/8/80/Location_Asia.svg" alt="Peta Asia">
+  <!-- Gantikan link ini dengan peta Asia yang jelas dari buku teks -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/8/88/Asia_(orthographic_projection).svg" alt="Peta Asia">
 
-  <!-- Hotspot untuk kawasan -->
+  <!-- Hotspot utama -->
   <div class="hotspot" style="top: 65%; left: 40%;" onclick="showPopup('India & Asia Tenggara','Iklim Monsun Tropika: hujan lebat bermusim, musim panas & musim hujan jelas.')"></div>
   <div class="hotspot" style="top: 50%; left: 70%;" onclick="showPopup('China Timur & Jepun','Iklim Subtropika Lembap: 4 musim, hujan sepanjang tahun, ribut taufan kadang-kadang.')"></div>
   <div class="hotspot" style="top: 25%; left: 80%;" onclick="showPopup('Siberia Utara','Iklim Kutub & Sejuk Kontinental: musim sejuk panjang, suhu sangat rendah.')"></div>
