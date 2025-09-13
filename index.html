@@ -22,11 +22,17 @@ h1{color:#2c3e50;}
 .feedback-icon {
   position: fixed;
   top: 50%; left:50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0);
   font-size:60px;
-  display:none;
+  display:block;
   z-index:20;
   pointer-events:none;
+  opacity:0;
+  transition: all 0.5s ease-out;
+}
+.feedback-icon.show {
+  opacity:1;
+  transform: translate(-50%, -50%) scale(1.5);
 }
 </style>
 </head>
@@ -63,7 +69,7 @@ h1{color:#2c3e50;}
 <button class="country-btn" onclick="startQuiz()">Mulakan Kuiz</button>
 
 <script>
-// Data
+// Data negara
 const countries = [
   {name:"India", climate:"Monsun Tropika", features:"Panas & lembap, hujan bermusim"},
   {name:"Thailand", climate:"Monsun Tropika", features:"Panas & lembap sepanjang tahun, hujan tinggi"},
@@ -77,7 +83,7 @@ const countries = [
   {name:"Nepal", climate:"Subtropika & Sejuk Gunung", features:"4 musim, suhu berubah ikut ketinggian"}
 ];
 
-// Buttons
+// Generate buttons
 const countryListDiv=document.getElementById("country-list");
 countries.forEach(c=>{
   const btn=document.createElement("button");
@@ -87,7 +93,7 @@ countries.forEach(c=>{
   countryListDiv.appendChild(btn);
 });
 
-// Flash card
+// Flash card popup
 const popup=document.getElementById("popup");
 const overlay=document.getElementById("overlay");
 function showPopup(title,text){
@@ -98,13 +104,10 @@ function showPopup(title,text){
 }
 function closePopup(){popup.style.display="none"; overlay.style.display="none";}
 
-// Audio BM
-const correctAudio=new Audio("https://translate.google.com/translate_tts?ie=UTF-8&q=Betul&tl=ms&client=tw-ob");
-const wrongAudio=new Audio("https://translate.google.com/translate_tts?ie=UTF-8&q=Salah&tl=ms&client=tw-ob");
-
 // Feedback icon
 const feedbackIcon = document.getElementById("feedback-icon");
 function showFeedback(correct){
+  feedbackIcon.classList.remove("show");
   if(correct){
     feedbackIcon.textContent="✅"; 
     feedbackIcon.style.color="#27ae60";
@@ -112,8 +115,8 @@ function showFeedback(correct){
     feedbackIcon.textContent="❌"; 
     feedbackIcon.style.color="#c0392b";
   }
-  feedbackIcon.style.display="block";
-  setTimeout(()=>{ feedbackIcon.style.display="none"; },800);
+  void feedbackIcon.offsetWidth; // restart animation
+  feedbackIcon.classList.add("show");
 }
 
 // Quiz logic
@@ -176,14 +179,12 @@ function checkAnswer(btn,correct){
   if(countdown) clearInterval(countdown);
   if(btn.textContent===correct){
     btn.classList.add("correct");
-    correctAudio.play();
-    score++;
-    flashBackground("#a3e635"); // hijau
+    flashBackground("#a3e635"); 
     showFeedback(true);
+    score++;
   } else{
     btn.classList.add("wrong");
-    wrongAudio.play();
-    flashBackground("#f87171"); // merah
+    flashBackground("#f87171"); 
     showFeedback(false);
   }
   [...quizOptions.children].forEach(b=>b.disabled=true);
@@ -200,7 +201,6 @@ function autoWrong(){
     if(!b.disabled) b.classList.add("wrong");
     b.disabled=true;
   });
-  wrongAudio.play();
   flashBackground("#f87171");
   showFeedback(false);
 }
@@ -213,9 +213,3 @@ function nextQuiz(){
     overlay.style.display="none";
     timerDiv.textContent="Masa: 0s";
     alert(`Tahniah! Kuiz selesai.\nSkor anda: ${score}/${quizData.length}`);
-  }
-}
-</script>
-
-</body>
-</html>
