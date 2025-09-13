@@ -7,8 +7,14 @@
 <style>
 body { font-family: Arial; background:#e0f7fa; text-align:center; margin:0;padding:20px; transition: background 0.3s;}
 h1{color:#2c3e50;}
-.country-btn, .quiz-btn{padding:12px 18px;margin:6px;font-size:16px;background:#3498db;color:white;border:none;border-radius:8px;cursor:pointer;transition:all 0.2s;}
+.country-btn, .quiz-btn{padding:12px 18px;margin:6px;font-size:16px;background:#3498db;color:white;border:none;border-radius:8px;cursor:pointer;transition:all 0.2s; position:relative;}
 .country-btn:hover, .quiz-btn:hover{transform:scale(1.05); background:#2980b9;}
+.country-btn[data-tooltip]:hover::after{
+  content: attr(data-tooltip);
+  position:absolute; top:-30px; left:50%; transform:translateX(-50%);
+  background:#f1c40f; color:#000; padding:5px 10px; border-radius:6px;
+  font-size:14px; white-space:nowrap;
+}
 .popup, .quiz-popup{position:fixed; top:50%;left:50%;transform:translate(-50%,-50%);background:#fff9c4;padding:20px;border-radius:16px;box-shadow:0 8px 25px rgba(0,0,0,0.4);max-width:380px;display:none; z-index:10;}
 .popup h2, .quiz-popup h2{margin-top:0; color:#f57c00;}
 .popup p, .quiz-popup p{font-size:16px; white-space:pre-line;}
@@ -19,21 +25,10 @@ h1{color:#2c3e50;}
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);display:none; z-index:5;}
 .scoreboard-container{display:flex; justify-content:space-between; max-width:600px; margin:10px auto; font-size:18px; color:#2c3e50;}
 .timer{font-size:18px; color:#e67e22;}
-.feedback-icon {
-  position: fixed;
-  top: 50%; left:50%;
-  transform: translate(-50%, -50%) scale(0);
-  font-size:60px;
-  display:block;
-  z-index:20;
-  pointer-events:none;
-  opacity:0;
-  transition: all 0.5s ease-out;
-}
-.feedback-icon.show {
-  opacity:1;
-  transform: translate(-50%, -50%) scale(1.5);
-}
+.feedback-icon {position: fixed; top: 50%; left:50%; transform: translate(-50%, -50%) scale(0); font-size:60px; display:block; z-index:20; pointer-events:none; opacity:0; transition: all 0.5s ease-out;}
+.feedback-icon.show {opacity:1; transform: translate(-50%, -50%) scale(1.5);}
+.timer-bar-container{width:100%; max-width:380px; height:15px; background:#ddd; border-radius:8px; margin:10px auto;}
+.timer-bar{height:100%; width:100%; background:#3498db; border-radius:8px; transition:width 1s linear;}
 </style>
 </head>
 <body>
@@ -44,6 +39,9 @@ h1{color:#2c3e50;}
 <div class="scoreboard-container">
   <div id="scoreboard">Skor: 0</div>
   <div class="timer" id="timer">Masa: 0s</div>
+</div>
+<div class="timer-bar-container">
+  <div class="timer-bar" id="timer-bar"></div>
 </div>
 
 <div id="country-list"></div>
@@ -83,12 +81,13 @@ const countries = [
   {name:"Nepal", climate:"Subtropika & Sejuk Gunung", features:"4 musim, suhu berubah ikut ketinggian"}
 ];
 
-// Generate buttons
+// Generate buttons dengan tooltip
 const countryListDiv=document.getElementById("country-list");
 countries.forEach(c=>{
   const btn=document.createElement("button");
   btn.textContent=c.name;
   btn.className="country-btn";
+  btn.setAttribute("data-tooltip", `Iklim: ${c.climate}`);
   btn.onclick=()=>showPopup(c.name,`Iklim: ${c.climate}\nCiri-ciri: ${c.features}`);
   countryListDiv.appendChild(btn);
 });
@@ -108,14 +107,9 @@ function closePopup(){popup.style.display="none"; overlay.style.display="none";}
 const feedbackIcon = document.getElementById("feedback-icon");
 function showFeedback(correct){
   feedbackIcon.classList.remove("show");
-  if(correct){
-    feedbackIcon.textContent="✅"; 
-    feedbackIcon.style.color="#27ae60";
-  } else {
-    feedbackIcon.textContent="❌"; 
-    feedbackIcon.style.color="#c0392b";
-  }
-  void feedbackIcon.offsetWidth; // restart animation
+  if(correct){ feedbackIcon.textContent="✅"; feedbackIcon.style.color="#27ae60"; }
+  else{ feedbackIcon.textContent="❌"; feedbackIcon.style.color="#c0392b"; }
+  void feedbackIcon.offsetWidth;
   feedbackIcon.classList.add("show");
 }
 
@@ -126,6 +120,7 @@ const quizQuestion=document.getElementById("quiz-question");
 const quizOptions=document.getElementById("quiz-options");
 const scoreboard=document.getElementById("scoreboard");
 const timerDiv=document.getElementById("timer");
+const timerBar=document.getElementById("timer-bar");
 
 function generateQuizData(){
   const shuffled=[...countries].sort(()=>0.5-Math.random());
@@ -158,9 +153,11 @@ function loadQuiz(){
   if(countdown) clearInterval(countdown);
   let timeLeft=10;
   timerDiv.textContent=`Masa: ${timeLeft}s`;
+  timerBar.style.width="100%";
   countdown=setInterval(()=>{
     timeLeft--;
     timerDiv.textContent=`Masa: ${timeLeft}s`;
+    timerBar.style.width=(timeLeft/10*100)+"%";
     if(timeLeft<=0){clearInterval(countdown); autoWrong();}
   },1000);
 
@@ -178,14 +175,11 @@ function resetBackground(){ document.body.style.background="#e0f7fa"; }
 function checkAnswer(btn,correct){
   if(countdown) clearInterval(countdown);
   if(btn.textContent===correct){
-    btn.classList.add("correct");
-    flashBackground("#a3e635"); 
-    showFeedback(true);
-    score++;
+    btn.classList.add("correct"); flashBackground("#a3e635"); showFeedback(true); score++;
   } else{
-    btn.classList.add("wrong");
-    flashBackground("#f87171"); 
-    showFeedback(false);
+    btn.classList.add("wrong"); flashBackground("#f87171"); showFeedback(false);
+    // Sorot jawapan betul
+    [...quizOptions.children].forEach(b=>{if(b.textContent===correct) b.classList.add("correct");});
   }
   [...quizOptions.children].forEach(b=>b.disabled=true);
   scoreboard.textContent="Skor: "+score;
@@ -203,13 +197,5 @@ function autoWrong(){
   });
   flashBackground("#f87171");
   showFeedback(false);
-}
-
-function nextQuiz(){
-  currentQuiz++;
-  if(currentQuiz<quizData.length) loadQuiz();
-  else{
-    quizPopup.style.display="none";
-    overlay.style.display="none";
-    timerDiv.textContent="Masa: 0s";
-    alert(`Tahniah! Kuiz selesai.\nSkor anda: ${score}/${quizData.length}`);
+  const correct = quizData[currentQuiz].answer;
+  [...quizOptions.children].forEach(b=>{if(b.textContent===correct) b.classList.add("correct");});
