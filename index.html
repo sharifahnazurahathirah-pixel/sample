@@ -5,58 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Game Interaktif: Kepelbagaian Iklim Asia</title>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #e0f7fa;
-  text-align: center;
-  margin: 0; padding: 20px;
-}
-h1 { color: #2c3e50; }
-.country-btn, .quiz-btn {
-  padding: 12px 18px;
-  margin: 6px;
-  font-size: 16px;
-  background: #3498db;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-.country-btn:hover, .quiz-btn:hover { transform: scale(1.05); background: #2980b9; }
-.popup, .quiz-popup {
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff9c4;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-  max-width: 380px;
-  display: none;
-  z-index: 10;
-}
-.popup h2, .quiz-popup h2 { margin-top: 0; color: #f57c00; }
-.popup p, .quiz-popup p { font-size: 16px; white-space: pre-line; }
-.close-btn, .next-btn {
-  margin-top: 15px;
-  padding: 10px 16px;
-  background: #f57c00;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
-.correct { background-color: #27ae60 !important; }
-.wrong { background-color: #c0392b !important; }
-.overlay {
-  position: fixed;
-  top: 0; left:0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.4);
-  display: none;
-  z-index: 5;
-}
+body { font-family: Arial; background:#e0f7fa; text-align:center; margin:0;padding:20px; transition: background 0.3s;}
+h1{color:#2c3e50;}
+.country-btn, .quiz-btn{padding:12px 18px;margin:6px;font-size:16px;background:#3498db;color:white;border:none;border-radius:8px;cursor:pointer;transition:all 0.2s;}
+.country-btn:hover, .quiz-btn:hover{transform:scale(1.05); background:#2980b9;}
+.popup, .quiz-popup{position:fixed; top:50%;left:50%;transform:translate(-50%,-50%);background:#fff9c4;padding:20px;border-radius:16px;box-shadow:0 8px 25px rgba(0,0,0,0.4);max-width:380px;display:none; z-index:10;}
+.popup h2, .quiz-popup h2{margin-top:0; color:#f57c00;}
+.popup p, .quiz-popup p{font-size:16px; white-space:pre-line;}
+.close-btn, .next-btn{margin-top:15px; padding:10px 16px;background:#f57c00;color:white;border:none;border-radius:10px;cursor:pointer;}
+.correct {background-color:#27ae60 !important; animation:flash 0.3s;}
+.wrong {background-color:#c0392b !important; animation:flash 0.3s;}
+@keyframes flash{0%{transform:scale(1);}50%{transform:scale(1.1);}100%{transform:scale(1);}}
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);display:none; z-index:5;}
+.scoreboard{margin-top:10px; font-size:18px; color:#2c3e50;}
+.timer{margin-top:10px; font-size:16px; color:#e67e22;}
 </style>
 </head>
 <body>
@@ -64,19 +26,18 @@ h1 { color: #2c3e50; }
 <h1>Game Interaktif: Kepelbagaian Iklim Asia</h1>
 <p>Klik nama negara/rantau untuk belajar info iklim, kemudian cuba kuiz! 🌏</p>
 
-<!-- Senarai negara/rantau -->
 <div id="country-list"></div>
+<div class="scoreboard" id="scoreboard">Skor: 0</div>
+<div class="timer" id="timer"></div>
 
 <div class="overlay" id="overlay"></div>
 
-<!-- Flash card popup -->
 <div class="popup" id="popup">
   <h2 id="popup-title"></h2>
   <p id="popup-text"></p>
   <button class="close-btn" onclick="closePopup()">Tutup</button>
 </div>
 
-<!-- Kuiz popup -->
 <div class="quiz-popup" id="quiz-popup">
   <h2 id="quiz-title">Soalan Kuiz</h2>
   <p id="quiz-question"></p>
@@ -88,7 +49,7 @@ h1 { color: #2c3e50; }
 <button class="country-btn" onclick="startQuiz()">Mulakan Kuiz</button>
 
 <script>
-// DATA FLASH CARD & KUIS
+// Data
 const countries = [
   {name:"India", climate:"Monsun Tropika", features:"Panas & lembap, hujan bermusim"},
   {name:"Thailand", climate:"Monsun Tropika", features:"Panas & lembap sepanjang tahun, hujan tinggi"},
@@ -99,113 +60,127 @@ const countries = [
   {name:"Malaysia", climate:"Tropika Basah", features:"Panas & lembap sepanjang tahun"},
   {name:"Vietnam", climate:"Monsun Tropika", features:"Panas & lembap, musim hujan jelas"},
   {name:"Pakistan", climate:"Arid & Monsun Tropika", features:"Panas, kering di barat, hujan bermusim di timur"},
-  {name:"Nepal", climate:"Subtropika & Sejuk Gunung", features:"4 musim, suhu berubah ikut ketinggian"},
-  {name:"Mongolia", climate:"Sejuk Kontinental", features:"Musim sejuk panjang, panas pendek"},
-  {name:"Iran", climate:"Gurun / Semi-Arid", features:"Panas, hujan sedikit"},
-  {name:"Turki", climate:"Mediterranean", features:"Musim panas kering, musim sejuk lembap"},
-  {name:"Afghanistan", climate:"Sejuk Kontinental & Gurun", features:"Musim sejuk panjang, panas pendek"},
-  {name:"Kazakhstan", climate:"Sejuk Kontinental", features:"Musim sejuk panjang, hujan sederhana"},
-  {name:"Myanmar", climate:"Monsun Tropika", features:"Panas & lembap, musim hujan jelas"},
-  {name:"Korea Selatan", climate:"Subtropika Lembap", features:"4 musim, hujan sepanjang tahun"},
-  {name:"Bangladesh", climate:"Monsun Tropika", features:"Hujan lebat musim monsun, panas lembap"},
-  {name:"Indonesia", climate:"Tropika Basah", features:"Panas & lembap sepanjang tahun, hujan tinggi"},
-  {name:"Sri Lanka", climate:"Tropika Monsun", features:"Panas & lembap, hujan musim monsun"}
+  {name:"Nepal", climate:"Subtropika & Sejuk Gunung", features:"4 musim, suhu berubah ikut ketinggian"}
 ];
 
-// Generate buttons
-const countryListDiv = document.getElementById("country-list");
+// Buttons
+const countryListDiv=document.getElementById("country-list");
 countries.forEach(c=>{
-  const btn = document.createElement("button");
-  btn.textContent = c.name;
-  btn.className = "country-btn";
-  btn.onclick = ()=>showPopup(c.name, `Iklim: ${c.climate}\nCiri-ciri: ${c.features}`);
+  const btn=document.createElement("button");
+  btn.textContent=c.name;
+  btn.className="country-btn";
+  btn.onclick=()=>showPopup(c.name,`Iklim: ${c.climate}\nCiri-ciri: ${c.features}`);
   countryListDiv.appendChild(btn);
 });
 
-// Flash card popup
-const popup = document.getElementById("popup");
-const overlay = document.getElementById("overlay");
-function showPopup(title, text){
-  document.getElementById("popup-title").textContent = title;
-  document.getElementById("popup-text").textContent = text;
-  popup.style.display = "block";
-  overlay.style.display = "block";
+// Flash card
+const popup=document.getElementById("popup");
+const overlay=document.getElementById("overlay");
+function showPopup(title,text){
+  document.getElementById("popup-title").textContent=title;
+  document.getElementById("popup-text").textContent=text;
+  popup.style.display="block";
+  overlay.style.display="block";
 }
-function closePopup(){
-  popup.style.display = "none";
-  overlay.style.display = "none";
-}
+function closePopup(){popup.style.display="none"; overlay.style.display="none";}
 
-// Audio BM “Betul/Salah”
-const correctAudio = new Audio("https://www.soundjay.com/button/beep-01a.mp3"); // Contoh beep untuk Betul
-const wrongAudio = new Audio("https://www.soundjay.com/button/beep-02.mp3");  // Contoh beep untuk Salah
+// Audio BM
+const correctAudio=new Audio("https://translate.google.com/translate_tts?ie=UTF-8&q=Betul&tl=ms&client=tw-ob");
+const wrongAudio=new Audio("https://translate.google.com/translate_tts?ie=UTF-8&q=Salah&tl=ms&client=tw-ob");
 
-// Kuiz data (10 soalan rawak)
-let quizData = [];
+// Quiz logic
+let quizData=[], currentQuiz=0, score=0, countdown;
+const quizPopup=document.getElementById("quiz-popup");
+const quizQuestion=document.getElementById("quiz-question");
+const quizOptions=document.getElementById("quiz-options");
+const scoreboard=document.getElementById("scoreboard");
+const timerDiv=document.getElementById("timer");
+
 function generateQuizData(){
-  const shuffled = [...countries].sort(()=>0.5 - Math.random());
-  quizData = shuffled.slice(0,10).map(c=>{
-    const options = [c.climate];
+  const shuffled=[...countries].sort(()=>0.5-Math.random());
+  quizData=shuffled.slice(0,5).map(c=>{
+    const options=[c.climate];
     while(options.length<3){
-      const rand = countries[Math.floor(Math.random()*countries.length)].climate;
+      const rand=countries[Math.floor(Math.random()*countries.length)].climate;
       if(!options.includes(rand)) options.push(rand);
     }
     return {question:`Apakah jenis iklim di ${c.name}?`, options:shuffleArray(options), answer:c.climate};
   });
 }
 
-// Shuffle function
-function shuffleArray(arr){return arr.sort(()=>0.5 - Math.random());}
-
-// Kuiz logic
-let currentQuiz = 0;
-const quizPopup = document.getElementById("quiz-popup");
-const quizQuestion = document.getElementById("quiz-question");
-const quizOptions = document.getElementById("quiz-options");
-let score = 0;
+function shuffleArray(arr){return arr.sort(()=>0.5-Math.random());}
 
 function startQuiz(){
-  overlay.style.display = "block";
-  quizPopup.style.display = "block";
-  currentQuiz = 0;
-  score = 0;
+  overlay.style.display="block";
+  quizPopup.style.display="block";
+  currentQuiz=0; score=0;
   generateQuizData();
   loadQuiz();
+  scoreboard.textContent="Skor: 0";
 }
 
 function loadQuiz(){
-  const data = quizData[currentQuiz];
-  quizQuestion.textContent = data.question;
-  quizOptions.innerHTML = "";
+  const data=quizData[currentQuiz];
+  quizQuestion.textContent=data.question;
+  quizOptions.innerHTML="";
+  resetBackground();
+  if(countdown) clearInterval(countdown);
+  let timeLeft=10;
+  timerDiv.textContent=`Masa: ${timeLeft}s`;
+  countdown=setInterval(()=>{
+    timeLeft--;
+    timerDiv.textContent=`Masa: ${timeLeft}s`;
+    if(timeLeft<=0){clearInterval(countdown); autoWrong();}
+  },1000);
+
   data.options.forEach(opt=>{
-    const btn = document.createElement("button");
-    btn.textContent = opt;
-    btn.className = "quiz-btn";
-    btn.onclick = ()=>checkAnswer(btn, data.answer);
+    const btn=document.createElement("button");
+    btn.textContent=opt;
+    btn.className="quiz-btn";
+    btn.onclick=()=>checkAnswer(btn,data.answer);
     quizOptions.appendChild(btn);
   });
 }
 
-function checkAnswer(btn, correct){
+function resetBackground(){ document.body.style.background="#e0f7fa"; }
+
+function checkAnswer(btn,correct){
+  if(countdown) clearInterval(countdown);
   if(btn.textContent===correct){
     btn.classList.add("correct");
     correctAudio.play();
     score++;
-  } else {
+    flashBackground("#a3e635"); // hijau
+  } else{
     btn.classList.add("wrong");
     wrongAudio.play();
+    flashBackground("#f87171"); // merah
   }
   [...quizOptions.children].forEach(b=>b.disabled=true);
+  scoreboard.textContent="Skor: "+score;
+}
+
+function flashBackground(color){
+  document.body.style.background=color;
+  setTimeout(()=>resetBackground(),300);
+}
+
+function autoWrong(){
+  [...quizOptions.children].forEach(b=>{
+    if(!b.disabled) b.classList.add("wrong");
+    b.disabled=true;
+  });
+  wrongAudio.play();
+  flashBackground("#f87171");
 }
 
 function nextQuiz(){
   currentQuiz++;
-  if(currentQuiz < quizData.length){
-    loadQuiz();
-  } else {
+  if(currentQuiz<quizData.length) loadQuiz();
+  else{
     quizPopup.style.display="none";
     overlay.style.display="none";
-    alert(`Tahniah! Kuiz selesai.\nSkor anda: ${score} / ${quizData.length}`);
+    alert(`Tahniah! Kuiz selesai.\nSkor anda: ${score}/${quizData.length}`);
   }
 }
 </script>
