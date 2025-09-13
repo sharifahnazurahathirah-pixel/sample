@@ -15,7 +15,7 @@ h1{color:#2c3e50;}
   background:#f1c40f; color:#000; padding:5px 10px; border-radius:6px;
   font-size:14px; white-space:nowrap;
 }
-.popup, .quiz-popup{position:fixed; top:50%;left:50%;transform:translate(-50%,-50%);background:#fff9c4;padding:20px;border-radius:16px;box-shadow:0 8px 25px rgba(0,0,0,0.4);max-width:380px;display:none; z-index:10;}
+.popup, .quiz-popup{position:fixed; top:50%;left:50%;transform:translate(-50%,-50%);background:#fff9c4;padding:20px;border-radius:16px;box-shadow:0 8px 25px rgba(0,0,0,0.4);max-width:400px;display:none; z-index:10;}
 .popup h2, .quiz-popup h2{margin-top:0; color:#f57c00;}
 .popup p, .quiz-popup p{font-size:16px; white-space:pre-line;}
 .close-btn, .next-btn{margin-top:15px; padding:10px 16px;background:#f57c00;color:white;border:none;border-radius:10px;cursor:pointer;}
@@ -24,17 +24,15 @@ h1{color:#2c3e50;}
 @keyframes flash{0%{transform:scale(1);}50%{transform:scale(1.1);}100%{transform:scale(1);}}
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);display:none; z-index:5;}
 .scoreboard-container{display:flex; justify-content:space-between; max-width:600px; margin:10px auto; font-size:18px; color:#2c3e50;}
-.timer{font-size:18px; color:#e67e22;}
-.feedback-icon {position: fixed; top: 50%; left:50%; transform: translate(-50%, -50%) scale(0); font-size:60px; display:block; z-index:20; pointer-events:none; opacity:0; transition: all 0.5s ease-out;}
-.feedback-icon.show {opacity:1; transform: translate(-50%, -50%) scale(1.5);}
 .timer-bar-container{width:100%; max-width:380px; height:15px; background:#ddd; border-radius:8px; margin:10px auto;}
 .timer-bar{height:100%; width:100%; background:#3498db; border-radius:8px; transition:width 1s linear;}
+.feedback-icon {position: fixed; top: 50%; left:50%; transform: translate(-50%, -50%) scale(0); font-size:60px; display:block; z-index:20; pointer-events:none; opacity:0; transition: all 0.5s ease-out;}
+.feedback-icon.show {opacity:1; transform: translate(-50%, -50%) scale(1.5);}
 </style>
 </head>
 <body>
 
 <h1>Game Interaktif: Kepelbagaian Iklim Asia</h1>
-<p>Klik nama negara/rantau untuk belajar info iklim, kemudian cuba kuiz! 🌏</p>
 
 <div class="scoreboard-container">
   <div id="scoreboard">Skor: 0</div>
@@ -44,6 +42,7 @@ h1{color:#2c3e50;}
   <div class="timer-bar" id="timer-bar"></div>
 </div>
 
+<p>Klik nama negara/rantau untuk belajar info iklim, kemudian cuba kuiz! 🌏</p>
 <div id="country-list"></div>
 
 <div class="overlay" id="overlay"></div>
@@ -67,7 +66,7 @@ h1{color:#2c3e50;}
 <button class="country-btn" onclick="startQuiz()">Mulakan Kuiz</button>
 
 <script>
-// Data negara
+// DATA FLASH CARD
 const countries = [
   {name:"India", climate:"Monsun Tropika", features:"Panas & lembap, hujan bermusim"},
   {name:"Thailand", climate:"Monsun Tropika", features:"Panas & lembap sepanjang tahun, hujan tinggi"},
@@ -78,42 +77,41 @@ const countries = [
   {name:"Malaysia", climate:"Tropika Basah", features:"Panas & lembap sepanjang tahun"},
   {name:"Vietnam", climate:"Monsun Tropika", features:"Panas & lembap, musim hujan jelas"},
   {name:"Pakistan", climate:"Arid & Monsun Tropika", features:"Panas, kering di barat, hujan bermusim di timur"},
-  {name:"Nepal", climate:"Subtropika & Sejuk Gunung", features:"4 musim, suhu berubah ikut ketinggian"}
+  {name:"Nepal", climate:"Subtropika & Sejuk Gunung", features:"4 musim, suhu berubah ikut ketinggian"},
+  {name:"Mongolia", climate:"Sejuk Kontinental", features:"Musim sejuk panjang, panas pendek"},
+  {name:"Iran", climate:"Gurun / Semi-Arid", features:"Panas, hujan sedikit"},
+  {name:"Turki", climate:"Mediterranean", features:"Musim panas kering, musim sejuk lembap"},
+  {name:"Afghanistan", climate:"Sejuk Kontinental & Gurun", features:"Musim sejuk panjang, panas pendek"},
+  {name:"Kazakhstan", climate:"Sejuk Kontinental", features:"Musim sejuk panjang, hujan sederhana"},
+  {name:"Myanmar", climate:"Monsun Tropika", features:"Panas & lembap, musim hujan jelas"},
+  {name:"Korea Selatan", climate:"Subtropika Lembap", features:"4 musim, hujan sepanjang tahun"},
+  {name:"Bangladesh", climate:"Monsun Tropika", features:"Hujan lebat musim monsun, panas lembap"},
+  {name:"Indonesia", climate:"Tropika Basah", features:"Panas & lembap sepanjang tahun, hujan tinggi"},
+  {name:"Sri Lanka", climate:"Tropika Monsun", features:"Panas & lembap, hujan musim monsun"}
 ];
 
-// Generate buttons dengan tooltip
-const countryListDiv=document.getElementById("country-list");
+// Generate flash card buttons
+const countryListDiv = document.getElementById("country-list");
 countries.forEach(c=>{
-  const btn=document.createElement("button");
-  btn.textContent=c.name;
-  btn.className="country-btn";
+  const btn = document.createElement("button");
+  btn.textContent = c.name;
+  btn.className = "country-btn";
   btn.setAttribute("data-tooltip", `Iklim: ${c.climate}`);
-  btn.onclick=()=>showPopup(c.name,`Iklim: ${c.climate}\nCiri-ciri: ${c.features}`);
+  btn.onclick = ()=>showPopup(c.name, `Iklim: ${c.climate}\nCiri-ciri: ${c.features}`);
   countryListDiv.appendChild(btn);
 });
 
 // Flash card popup
-const popup=document.getElementById("popup");
-const overlay=document.getElementById("overlay");
-function showPopup(title,text){
-  document.getElementById("popup-title").textContent=title;
-  document.getElementById("popup-text").textContent=text;
-  popup.style.display="block";
-  overlay.style.display="block";
-}
+const popup = document.getElementById("popup");
+const overlay = document.getElementById("overlay");
+function showPopup(title,text){document.getElementById("popup-title").textContent=title; document.getElementById("popup-text").textContent=text; popup.style.display="block"; overlay.style.display="block";}
 function closePopup(){popup.style.display="none"; overlay.style.display="none";}
 
-// Feedback icon
+// Feedback
 const feedbackIcon = document.getElementById("feedback-icon");
-function showFeedback(correct){
-  feedbackIcon.classList.remove("show");
-  if(correct){ feedbackIcon.textContent="✅"; feedbackIcon.style.color="#27ae60"; }
-  else{ feedbackIcon.textContent="❌"; feedbackIcon.style.color="#c0392b"; }
-  void feedbackIcon.offsetWidth;
-  feedbackIcon.classList.add("show");
-}
+function showFeedback(correct){ feedbackIcon.classList.remove("show"); if(correct){feedbackIcon.textContent="✅"; feedbackIcon.style.color="#27ae60";} else{feedbackIcon.textContent="❌"; feedbackIcon.style.color="#c0392b";} void feedbackIcon.offsetWidth; feedbackIcon.classList.add("show");}
 
-// Quiz logic
+// Quiz
 let quizData=[], currentQuiz=0, score=0, countdown;
 const quizPopup=document.getElementById("quiz-popup");
 const quizQuestion=document.getElementById("quiz-question");
@@ -122,31 +120,13 @@ const scoreboard=document.getElementById("scoreboard");
 const timerDiv=document.getElementById("timer");
 const timerBar=document.getElementById("timer-bar");
 
-function generateQuizData(){
-  const shuffled=[...countries].sort(()=>0.5-Math.random());
-  quizData=shuffled.slice(0,5).map(c=>{
-    const options=[c.climate];
-    while(options.length<3){
-      const rand=countries[Math.floor(Math.random()*countries.length)].climate;
-      if(!options.includes(rand)) options.push(rand);
-    }
-    return {question:`Apakah jenis iklim di ${c.name}?`, options:shuffleArray(options), answer:c.climate};
-  });
-}
-
 function shuffleArray(arr){return arr.sort(()=>0.5-Math.random());}
+function generateQuizData(){ const shuffled=shuffleArray([...countries]); quizData=shuffled.slice(0,10).map(c=>{ let options=[c.climate]; while(options.length<3){ const rand=countries[Math.floor(Math.random()*countries.length)].climate; if(!options.includes(rand)) options.push(rand);} return {question:`Apakah jenis iklim di ${c.name}?`, options:shuffleArray(options), answer:c.climate};});}
 
-function startQuiz(){
-  overlay.style.display="block";
-  quizPopup.style.display="block";
-  currentQuiz=0; score=0;
-  generateQuizData();
-  loadQuiz();
-  scoreboard.textContent="Skor: 0";
-}
+function startQuiz(){ overlay.style.display="block"; quizPopup.style.display="block"; currentQuiz=0; score=0; generateQuizData(); loadQuiz(); scoreboard.textContent="Skor: 0";}
 
 function loadQuiz(){
-  const data=quizData[currentQuiz];
+  const data = quizData[currentQuiz];
   quizQuestion.textContent=data.question;
   quizOptions.innerHTML="";
   resetBackground();
@@ -154,48 +134,28 @@ function loadQuiz(){
   let timeLeft=10;
   timerDiv.textContent=`Masa: ${timeLeft}s`;
   timerBar.style.width="100%";
-  countdown=setInterval(()=>{
-    timeLeft--;
-    timerDiv.textContent=`Masa: ${timeLeft}s`;
-    timerBar.style.width=(timeLeft/10*100)+"%";
-    if(timeLeft<=0){clearInterval(countdown); autoWrong();}
-  },1000);
-
+  countdown=setInterval(()=>{timeLeft--; timerDiv.textContent=`Masa: ${timeLeft}s`; timerBar.style.width=(timeLeft/10*100)+"%"; if(timeLeft<=0){clearInterval(countdown); autoWrong();}},1000);
   data.options.forEach(opt=>{
-    const btn=document.createElement("button");
-    btn.textContent=opt;
+    const btn = document.createElement("button");
+    btn.textContent = opt;
     btn.className="quiz-btn";
-    btn.onclick=()=>checkAnswer(btn,data.answer);
+    btn.onclick=()=>checkAnswer(btn, data.answer);
     quizOptions.appendChild(btn);
   });
 }
 
 function resetBackground(){ document.body.style.background="#e0f7fa"; }
-
 function checkAnswer(btn,correct){
   if(countdown) clearInterval(countdown);
-  if(btn.textContent===correct){
-    btn.classList.add("correct"); flashBackground("#a3e635"); showFeedback(true); score++;
-  } else{
-    btn.classList.add("wrong"); flashBackground("#f87171"); showFeedback(false);
-    // Sorot jawapan betul
-    [...quizOptions.children].forEach(b=>{if(b.textContent===correct) b.classList.add("correct");});
-  }
+  if(btn.textContent===correct){btn.classList.add("correct"); flashBackground("#a3e635"); showFeedback(true); score++; scoreboard.textContent="Skor: "+score;} 
+  else{btn.classList.add("wrong"); flashBackground("#f87171"); showFeedback(false); [...quizOptions.children].forEach(b=>{if(b.textContent===correct) b.classList.add("correct");}); [...quizOptions.children].forEach(b=>b.disabled=true);}
   [...quizOptions.children].forEach(b=>b.disabled=true);
-  scoreboard.textContent="Skor: "+score;
 }
 
-function flashBackground(color){
-  document.body.style.background=color;
-  setTimeout(()=>resetBackground(),300);
-}
+function flashBackground(color){ document.body.style.background=color; setTimeout(()=>resetBackground(),300);}
+function autoWrong(){ [...quizOptions.children].forEach(b=>{if(!b.disabled) b.classList.add("wrong"); b.disabled=true;}); flashBackground("#f87171"); showFeedback(false); const correct = quizData[currentQuiz].answer; [...quizOptions.children].forEach(b=>{if(b.textContent===correct) b.classList.add("correct");});}
+function nextQuiz(){ currentQuiz++; if(currentQuiz<quizData.length) loadQuiz(); else{ quizPopup.style.display="none"; overlay.style.display="none"; timerDiv.textContent="Masa: 0s"; timerBar.style.width="0%"; alert(`Tahniah! Kuiz selesai.\nSkor anda: ${score}/${quizData.length}`);}}
+</script>
 
-function autoWrong(){
-  [...quizOptions.children].forEach(b=>{
-    if(!b.disabled) b.classList.add("wrong");
-    b.disabled=true;
-  });
-  flashBackground("#f87171");
-  showFeedback(false);
-  const correct = quizData[currentQuiz].answer;
-  [...quizOptions.children].forEach(b=>{if(b.textContent===correct) b.classList.add("correct");});
+</body>
+</html>
