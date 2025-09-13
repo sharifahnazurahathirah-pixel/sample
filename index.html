@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game: Kepelbagaian Iklim di Asia</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f0f9ff;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+}
+h1 { color: #2c3e50; }
+.map-container {
+  position: relative;
+  display: inline-block;
+  max-width: 90%;
+}
+.map-container img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+.hotspot {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  background: rgba(231, 76, 60, 0.8);
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  border: 2px solid white;
+}
+.hotspot:hover { background: #c0392b; }
+.popup {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  max-width: 300px;
+  display: none;
+  z-index: 10;
+}
+.popup h2 { margin-top: 0; color: #2980b9; }
+.close-btn {
+  margin-top: 15px;
+  padding: 8px 14px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.overlay {
+  position: fixed;
+  top: 0; left:0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  z-index: 5;
+}
+</style>
+</head>
+<body>
+
+<h1>Game: Kepelbagaian Iklim di Asia</h1>
+<p>Klik kawasan hotspot pada peta untuk mengetahui iklim di Asia 🌏</p>
+
+<div class="map-container">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/8/80/Location_Asia.svg" alt="Peta Asia">
+
+  <!-- Hotspot untuk kawasan -->
+  <div class="hotspot" style="top: 65%; left: 40%;" onclick="showPopup('India & Asia Tenggara','Iklim Monsun Tropika: hujan lebat bermusim, musim panas & musim hujan jelas.')"></div>
+  <div class="hotspot" style="top: 50%; left: 70%;" onclick="showPopup('China Timur & Jepun','Iklim Subtropika Lembap: 4 musim, hujan sepanjang tahun, ribut taufan kadang-kadang.')"></div>
+  <div class="hotspot" style="top: 25%; left: 80%;" onclick="showPopup('Siberia Utara','Iklim Kutub & Sejuk Kontinental: musim sejuk panjang, suhu sangat rendah.')"></div>
+  <div class="hotspot" style="top: 55%; left: 20%;" onclick="showPopup('Asia Barat','Iklim Gurun / Arid: panas kering, hujan sangat sedikit.')"></div>
+  <div class="hotspot" style="top: 75%; left: 55%;" onclick="showPopup('Asia Tenggara','Iklim Tropika Basah: panas & lembap sepanjang tahun, hujan tinggi.')"></div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<div class="popup" id="popup">
+  <h2 id="popup-title"></h2>
+  <p id="popup-text"></p>
+  <button class="close-btn" onclick="closePopup()">Tutup</button>
+</div>
+
+<script>
+function showPopup(title, text){
+  document.getElementById("popup-title").textContent = title;
+  document.getElementById("popup-text").textContent = text;
+  document.getElementById("popup").style.display = "block";
+  document.getElementById("overlay").style.display = "block";
+}
+function closePopup(){
+  document.getElementById("popup").style.display = "none";
+  document.getElementById("overlay").style.display = "none";
+}
+</script>
+
+</body>
+</html>
