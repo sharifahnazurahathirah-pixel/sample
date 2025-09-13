@@ -1,12 +1,63 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Interaktif: Kepelbagaian Iklim Asia</title>
-  <style>
-    /* Gaya CSS seperti sebelumnya */
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Interaktif: Kepelbagaian Iklim Asia</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #e0f7fa;
+  text-align: center;
+  margin: 0; padding: 20px;
+}
+h1 { color: #2c3e50; }
+.country-btn, .quiz-btn {
+  padding: 12px 18px;
+  margin: 6px;
+  font-size: 16px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.country-btn:hover, .quiz-btn:hover { transform: scale(1.05); background: #2980b9; }
+.popup, .quiz-popup {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff9c4;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  max-width: 380px;
+  display: none;
+  z-index: 10;
+}
+.popup h2, .quiz-popup h2 { margin-top: 0; color: #f57c00; }
+.popup p, .quiz-popup p { font-size: 16px; white-space: pre-line; }
+.close-btn, .next-btn {
+  margin-top: 15px;
+  padding: 10px 16px;
+  background: #f57c00;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.correct { background-color: #27ae60 !important; }
+.wrong { background-color: #c0392b !important; }
+.overlay {
+  position: fixed;
+  top: 0; left:0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  z-index: 5;
+}
+</style>
 </head>
 <body>
 
@@ -85,11 +136,11 @@ function closePopup(){
   overlay.style.display = "none";
 }
 
-// Audio Bahasa Melayu
-const correctAudio = new Audio("https://ttsmp3.com/created_mp3/Betul.mp3"); // "Betul!"
-const wrongAudio = new Audio("https://ttsmp3.com/created_mp3/Salah.mp3");     // "Salah!"
+// Audio BM “Betul/Salah”
+const correctAudio = new Audio("https://www.soundjay.com/button/beep-01a.mp3"); // Contoh beep untuk Betul
+const wrongAudio = new Audio("https://www.soundjay.com/button/beep-02.mp3");  // Contoh beep untuk Salah
 
-// Kuiz data (boleh pilih 10 soalan rawak)
+// Kuiz data (10 soalan rawak)
 let quizData = [];
 function generateQuizData(){
   const shuffled = [...countries].sort(()=>0.5 - Math.random());
@@ -109,7 +160,6 @@ function shuffleArray(arr){return arr.sort(()=>0.5 - Math.random());}
 // Kuiz logic
 let currentQuiz = 0;
 const quizPopup = document.getElementById("quiz-popup");
-const quizTitle = document.getElementById("quiz-title");
 const quizQuestion = document.getElementById("quiz-question");
 const quizOptions = document.getElementById("quiz-options");
 let score = 0;
@@ -145,7 +195,6 @@ function checkAnswer(btn, correct){
     btn.classList.add("wrong");
     wrongAudio.play();
   }
-  // Disable all buttons
   [...quizOptions.children].forEach(b=>b.disabled=true);
 }
 
