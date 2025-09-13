@@ -130,6 +130,7 @@ function loadQuiz(){
   quizQuestion.textContent=data.question;
   quizOptions.innerHTML="";
   resetBackground();
+  feedbackIcon.classList.remove("show"); // sembunyikan feedback
   if(countdown) clearInterval(countdown);
   let timeLeft=10;
   timerDiv.textContent=`Masa: ${timeLeft}s`;
@@ -148,13 +149,24 @@ function resetBackground(){ document.body.style.background="#e0f7fa"; }
 function checkAnswer(btn,correct){
   if(countdown) clearInterval(countdown);
   if(btn.textContent===correct){btn.classList.add("correct"); flashBackground("#a3e635"); showFeedback(true); score++; scoreboard.textContent="Skor: "+score;} 
-  else{btn.classList.add("wrong"); flashBackground("#f87171"); showFeedback(false); [...quizOptions.children].forEach(b=>{if(b.textContent===correct) b.classList.add("correct");}); [...quizOptions.children].forEach(b=>b.disabled=true);}
+  else{btn.classList.add("wrong"); flashBackground("#f87171"); showFeedback(false); [...quizOptions.children].forEach(b=>{if(b.textContent===correct) b.classList.add("correct");});}
   [...quizOptions.children].forEach(b=>b.disabled=true);
 }
 
 function flashBackground(color){ document.body.style.background=color; setTimeout(()=>resetBackground(),300);}
 function autoWrong(){ [...quizOptions.children].forEach(b=>{if(!b.disabled) b.classList.add("wrong"); b.disabled=true;}); flashBackground("#f87171"); showFeedback(false); const correct = quizData[currentQuiz].answer; [...quizOptions.children].forEach(b=>{if(b.textContent===correct) b.classList.add("correct");});}
-function nextQuiz(){ currentQuiz++; if(currentQuiz<quizData.length) loadQuiz(); else{ quizPopup.style.display="none"; overlay.style.display="none"; timerDiv.textContent="Masa: 0s"; timerBar.style.width="0%"; alert(`Tahniah! Kuiz selesai.\nSkor anda: ${score}/${quizData.length}`);}}
+function nextQuiz(){ 
+  currentQuiz++; 
+  feedbackIcon.classList.remove("show"); // sembunyikan ikon setiap soal
+  if(currentQuiz<quizData.length) loadQuiz();
+  else{ 
+    quizPopup.style.display="none"; 
+    overlay.style.display="none"; 
+    timerDiv.textContent="Masa: 0s"; 
+    timerBar.style.width="0%"; 
+    alert(`Tahniah! Kuiz selesai.\nSkor anda: ${score}/${quizData.length}`);
+  }
+}
 </script>
 
 </body>
