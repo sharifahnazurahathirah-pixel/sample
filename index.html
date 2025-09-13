@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game: Kepelbagaian Iklim di Asia</title>
+<title>Game Interaktif: Kepelbagaian Iklim Asia</title>
 <style>
 body {
   font-family: Arial, sans-serif;
-  background: #f0f9ff;
+  background: #e0f7fa;
   text-align: center;
   margin: 0; padding: 20px;
 }
 h1 { color: #2c3e50; }
-.country-btn {
-  padding: 12px 20px;
-  margin: 10px;
+.country-btn, .quiz-btn {
+  padding: 12px 18px;
+  margin: 6px;
   font-size: 16px;
   background: #3498db;
   color: white;
@@ -23,8 +23,8 @@ h1 { color: #2c3e50; }
   cursor: pointer;
   transition: transform 0.2s;
 }
-.country-btn:hover { transform: scale(1.1); background: #2980b9; }
-.popup {
+.country-btn:hover, .quiz-btn:hover { transform: scale(1.05); background: #2980b9; }
+.popup, .quiz-popup {
   position: fixed;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
@@ -32,13 +32,13 @@ h1 { color: #2c3e50; }
   padding: 20px;
   border-radius: 16px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-  max-width: 350px;
+  max-width: 380px;
   display: none;
   z-index: 10;
 }
-.popup h2 { margin-top: 0; color: #f57c00; }
-.popup p { font-size: 16px; }
-.close-btn {
+.popup h2, .quiz-popup h2 { margin-top: 0; color: #f57c00; }
+.popup p, .quiz-popup p { font-size: 16px; white-space: pre-line; }
+.close-btn, .next-btn {
   margin-top: 15px;
   padding: 10px 16px;
   background: #f57c00;
@@ -47,6 +47,8 @@ h1 { color: #2c3e50; }
   border-radius: 10px;
   cursor: pointer;
 }
+.correct { background-color: #27ae60 !important; }
+.wrong { background-color: #c0392b !important; }
 .overlay {
   position: fixed;
   top: 0; left:0;
@@ -59,33 +61,154 @@ h1 { color: #2c3e50; }
 </head>
 <body>
 
-<h1>Game: Kenal Iklim Asia</h1>
-<p>Klik negara atau rantau untuk mengetahui jenis iklim dan ciri-cirinya 🌏</p>
+<h1>Game Interaktif: Kepelbagaian Iklim Asia</h1>
+<p>Klik nama negara/rantau untuk belajar info iklim, kemudian cuba kuiz! 🌏</p>
 
 <!-- Senarai negara/rantau -->
-<button class="country-btn" onclick="showPopup('India & Asia Tenggara','Iklim: Monsun Tropika\nCiri-ciri: Hujan lebat bermusim, panas & lembap.')">India & Asia Tenggara</button>
-<button class="country-btn" onclick="showPopup('China Timur & Jepun','Iklim: Subtropika Lembap\nCiri-ciri: 4 musim, hujan sepanjang tahun, ribut taufan kadang-kadang.')">China Timur & Jepun</button>
-<button class="country-btn" onclick="showPopup('Siberia Utara','Iklim: Kutub & Sejuk Kontinental\nCiri-ciri: Musim sejuk panjang, suhu sangat rendah.')">Siberia Utara</button>
-<button class="country-btn" onclick="showPopup('Asia Barat','Iklim: Gurun / Arid\nCiri-ciri: Panas kering, hujan sangat sedikit.')">Asia Barat</button>
-<button class="country-btn" onclick="showPopup('Asia Tenggara','Iklim: Tropika Basah\nCiri-ciri: Panas & lembap sepanjang tahun, hujan tinggi.')">Asia Tenggara</button>
+<div id="country-list"></div>
 
 <div class="overlay" id="overlay"></div>
+
+<!-- Flash card popup -->
 <div class="popup" id="popup">
   <h2 id="popup-title"></h2>
   <p id="popup-text"></p>
   <button class="close-btn" onclick="closePopup()">Tutup</button>
 </div>
 
+<!-- Kuiz popup -->
+<div class="quiz-popup" id="quiz-popup">
+  <h2 id="quiz-title">Soalan Kuiz</h2>
+  <p id="quiz-question"></p>
+  <div id="quiz-options"></div>
+  <button class="next-btn" onclick="nextQuiz()">Seterusnya</button>
+</div>
+
+<br>
+<button class="country-btn" onclick="startQuiz()">Mulakan Kuiz</button>
+
 <script>
+// DATA FLASH CARD & KUIS
+const countries = [
+  {name:"India", climate:"Monsun Tropika", features:"Panas & lembap, hujan bermusim"},
+  {name:"Thailand", climate:"Monsun Tropika", features:"Panas & lembap sepanjang tahun, hujan tinggi"},
+  {name:"China Utara", climate:"Subtropika Lembap", features:"4 musim, ribut taufan kadang-kadang"},
+  {name:"Jepun", climate:"Subtropika Lembap", features:"4 musim, ribut taufan kadang-kadang"},
+  {name:"Siberia", climate:"Kutub & Sejuk Kontinental", features:"Musim sejuk panjang, suhu sangat rendah"},
+  {name:"Arab Saudi", climate:"Gurun / Arid", features:"Panas kering, hujan sedikit"},
+  {name:"Malaysia", climate:"Tropika Basah", features:"Panas & lembap sepanjang tahun"},
+  {name:"Vietnam", climate:"Monsun Tropika", features:"Panas & lembap, musim hujan jelas"},
+  {name:"Pakistan", climate:"Arid & Monsun Tropika", features:"Panas, kering di barat, hujan bermusim di timur"},
+  {name:"Nepal", climate:"Subtropika & Sejuk Gunung", features:"4 musim, suhu berubah ikut ketinggian"},
+  {name:"Mongolia", climate:"Sejuk Kontinental", features:"Musim sejuk panjang, panas pendek"},
+  {name:"Iran", climate:"Gurun / Semi-Arid", features:"Panas, hujan sedikit"},
+  {name:"Turki", climate:"Mediterranean", features:"Musim panas kering, musim sejuk lembap"},
+  {name:"Afghanistan", climate:"Sejuk Kontinental & Gurun", features:"Musim sejuk panjang, panas pendek"},
+  {name:"Kazakhstan", climate:"Sejuk Kontinental", features:"Musim sejuk panjang, hujan sederhana"},
+  {name:"Myanmar", climate:"Monsun Tropika", features:"Panas & lembap, musim hujan jelas"},
+  {name:"Korea Selatan", climate:"Subtropika Lembap", features:"4 musim, hujan sepanjang tahun"},
+  {name:"Bangladesh", climate:"Monsun Tropika", features:"Hujan lebat musim monsun, panas lembap"},
+  {name:"Indonesia", climate:"Tropika Basah", features:"Panas & lembap sepanjang tahun, hujan tinggi"},
+  {name:"Sri Lanka", climate:"Tropika Monsun", features:"Panas & lembap, hujan musim monsun"}
+];
+
+// Generate buttons
+const countryListDiv = document.getElementById("country-list");
+countries.forEach(c=>{
+  const btn = document.createElement("button");
+  btn.textContent = c.name;
+  btn.className = "country-btn";
+  btn.onclick = ()=>showPopup(c.name, `Iklim: ${c.climate}\nCiri-ciri: ${c.features}`);
+  countryListDiv.appendChild(btn);
+});
+
+// Flash card popup
+const popup = document.getElementById("popup");
+const overlay = document.getElementById("overlay");
 function showPopup(title, text){
   document.getElementById("popup-title").textContent = title;
   document.getElementById("popup-text").textContent = text;
-  document.getElementById("popup").style.display = "block";
-  document.getElementById("overlay").style.display = "block";
+  popup.style.display = "block";
+  overlay.style.display = "block";
 }
 function closePopup(){
-  document.getElementById("popup").style.display = "none";
-  document.getElementById("overlay").style.display = "none";
+  popup.style.display = "none";
+  overlay.style.display = "none";
+}
+
+// Audio Bahasa Melayu
+const correctAudio = new Audio("audio/correct.mp3"); // "Betul!"
+const wrongAudio = new Audio("audio/wrong.mp3");     // "Salah!"
+
+// Kuiz data (boleh pilih 10 soalan rawak)
+let quizData = [];
+function generateQuizData(){
+  const shuffled = [...countries].sort(()=>0.5 - Math.random());
+  quizData = shuffled.slice(0,10).map(c=>{
+    const options = [c.climate];
+    while(options.length<3){
+      const rand = countries[Math.floor(Math.random()*countries.length)].climate;
+      if(!options.includes(rand)) options.push(rand);
+    }
+    return {question:`Apakah jenis iklim di ${c.name}?`, options:shuffleArray(options), answer:c.climate};
+  });
+}
+
+// Shuffle function
+function shuffleArray(arr){return arr.sort(()=>0.5 - Math.random());}
+
+// Kuiz logic
+let currentQuiz = 0;
+const quizPopup = document.getElementById("quiz-popup");
+const quizTitle = document.getElementById("quiz-title");
+const quizQuestion = document.getElementById("quiz-question");
+const quizOptions = document.getElementById("quiz-options");
+let score = 0;
+
+function startQuiz(){
+  overlay.style.display = "block";
+  quizPopup.style.display = "block";
+  currentQuiz = 0;
+  score = 0;
+  generateQuizData();
+  loadQuiz();
+}
+
+function loadQuiz(){
+  const data = quizData[currentQuiz];
+  quizQuestion.textContent = data.question;
+  quizOptions.innerHTML = "";
+  data.options.forEach(opt=>{
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.className = "quiz-btn";
+    btn.onclick = ()=>checkAnswer(btn, data.answer);
+    quizOptions.appendChild(btn);
+  });
+}
+
+function checkAnswer(btn, correct){
+  if(btn.textContent===correct){
+    btn.classList.add("correct");
+    correctAudio.play();
+    score++;
+  } else {
+    btn.classList.add("wrong");
+    wrongAudio.play();
+  }
+  // Disable all buttons
+  [...quizOptions.children].forEach(b=>b.disabled=true);
+}
+
+function nextQuiz(){
+  currentQuiz++;
+  if(currentQuiz < quizData.length){
+    loadQuiz();
+  } else {
+    quizPopup.style.display="none";
+    overlay.style.display="none";
+    alert(`Tahniah! Kuiz selesai.\nSkor anda: ${score} / ${quizData.length}`);
+  }
 }
 </script>
 
