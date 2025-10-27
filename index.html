@@ -20,6 +20,30 @@
         .hex-digit:hover {
             transform: scale(1.1);
         }
+        
+        /* Enhanced button styles for better mobile interaction */
+        button {
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+        
+        /* Ensure buttons are easily tappable on mobile */
+        @media (max-width: 640px) {
+            button {
+                min-height: 48px;
+                font-size: 16px;
+            }
+        }
         .calculation-step {
             animation: fadeIn 0.5s ease-in;
         }
@@ -207,7 +231,7 @@
      </div><!-- Answer Input -->
      <div class="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 mb-4 px-4"><input type="number" id="answer-input" placeholder="Jawapan anda" class="text-lg sm:text-xl px-3 sm:px-4 py-2 sm:py-3 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none w-full sm:w-48 text-center"> <span class="text-lg sm:text-xl text-gray-500">₁₀</span>
      </div><!-- Buttons -->
-     <div class="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3 mb-4 px-2"><button id="check-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base w-full sm:w-auto"> Semak Jawapan </button> <button id="show-steps-btn" class="bg-gray-500 hover:bg-gray-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base w-full sm:w-auto"> Tunjuk Langkah </button> <button id="next-btn" class="bg-green-600 hover:bg-green-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base w-full sm:w-auto hidden"> Soalan Seterusnya </button>
+     <div class="flex flex-col sm:flex-row justify-center gap-3 mb-4 px-4 max-w-md mx-auto"><button id="check-btn" class="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 text-base w-full sm:w-auto min-h-[48px] touch-manipulation"> Semak Jawapan </button> <button id="show-steps-btn" class="bg-gray-500 hover:bg-gray-600 active:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 text-base w-full sm:w-auto min-h-[48px] touch-manipulation"> Tunjuk Langkah </button> <button id="next-btn" class="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 text-base w-full sm:w-auto min-h-[48px] touch-manipulation hidden"> Soalan Seterusnya </button>
      </div><!-- Feedback -->
      <div id="feedback" class="text-base sm:text-lg font-semibold hidden px-2"></div>
     </div>
@@ -437,14 +461,25 @@
 
         async function checkAnswer() {
             try {
+                const checkBtn = document.getElementById('check-btn');
                 const userAnswer = parseInt(document.getElementById('answer-input').value);
                 const feedback = document.getElementById('feedback');
                 const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
+
+                // Show loading state
+                checkBtn.disabled = true;
+                checkBtn.textContent = 'Menyemak...';
+                checkBtn.classList.add('opacity-75');
 
                 if (isNaN(userAnswer)) {
                     feedback.textContent = 'Sila masukkan nombor yang sah.';
                     feedback.className = 'text-base sm:text-lg font-semibold text-red-600';
                     feedback.classList.remove('hidden');
+                    
+                    // Reset button
+                    checkBtn.disabled = false;
+                    checkBtn.textContent = 'Semak Jawapan';
+                    checkBtn.classList.remove('opacity-75');
                     return;
                 }
 
@@ -509,15 +544,36 @@
         }
 
         function setupEventListeners() {
-            document.getElementById('check-btn').addEventListener('click', checkAnswer);
+            // Add visual feedback for button clicks
+            document.getElementById('check-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                e.target.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    e.target.style.transform = 'scale(1)';
+                }, 100);
+                checkAnswer();
+            });
             
-            document.getElementById('show-steps-btn').addEventListener('click', () => {
+            document.getElementById('show-steps-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                e.target.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    e.target.style.transform = 'scale(1)';
+                }, 100);
+                
                 if (currentQuestion) {
                     showCalculationSteps(currentQuestion.hex);
                 }
             });
             
-            document.getElementById('next-btn').addEventListener('click', generateNewQuestion);
+            document.getElementById('next-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                e.target.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    e.target.style.transform = 'scale(1)';
+                }, 100);
+                generateNewQuestion();
+            });
             
             document.getElementById('answer-input').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -536,5 +592,5 @@
         // Initialize app when page loads
         document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9950d2358685cf0c',t:'MTc2MTU1MzcxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9950d79441d9cf0c',t:'MTc2MTU1MzkzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
