@@ -479,11 +479,11 @@
             // Show last 5 results
             const recentResults = allResults.slice(-5).reverse();
             container.innerHTML = recentResults.map(result => `
-                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 sm:p-4 rounded-lg border-2 ${result.is_correct ? 'border-green-400 bg-green-900/30' : 'border-red-400 bg-red-900/30'} shadow-md gap-2 sm:gap-0">
-                    <span class="font-medium text-sm sm:text-base text-white">${result.question}</span>
-                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                        <span class="text-xs sm:text-sm px-2 py-1 rounded bg-slate-600 text-white text-center">Jawapan: ${result.user_answer}</span>
-                        <span class="${result.is_correct ? 'text-green-400 bg-green-500' : 'text-red-400 bg-red-500'} font-bold px-3 py-1 rounded-full text-white shadow-lg text-xs sm:text-sm text-center">
+                <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center p-4 rounded-lg border-2 ${result.is_correct ? 'border-green-400 bg-green-900/30' : 'border-red-400 bg-red-900/30'} shadow-md gap-3">
+                    <span class="font-medium text-base text-white">${result.question}</span>
+                    <div class="flex flex-col lg:flex-row lg:items-center gap-3">
+                        <span class="text-sm px-3 py-2 rounded bg-slate-600 text-white text-center">Jawapan: ${result.user_answer}</span>
+                        <span class="${result.is_correct ? 'text-white bg-green-500' : 'text-white bg-red-500'} font-bold px-4 py-2 rounded-full shadow-lg text-sm text-center">
                             ${result.is_correct ? '✓ BETUL' : '✗ SALAH'}
                         </span>
                     </div>
@@ -531,5 +531,5 @@
         // Start the application
         init();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9951457ad7c46b5d',t:'MTc2MTU1ODQ0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99515af0f20a1fe1',t:'MTc2MTU1OTMxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
