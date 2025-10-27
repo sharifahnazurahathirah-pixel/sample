@@ -1,514 +1,865 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ms">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Latihan Sistem Nombor Perenambelasan</title>
-  <script src="/_sdk/element_sdk.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard: Mengesan & Membaiki Ralat Algoritma</title>
+    <style>
         body {
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #333;
         }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
+        
+        html, body {
+            height: 100%;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
-        .pulse-correct {
-            animation: pulseGreen 0.6s ease-in-out;
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
         }
-        .pulse-wrong {
-            animation: pulseRed 0.6s ease-in-out;
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 700;
         }
-        @keyframes pulseGreen {
-            0%, 100% { background-color: #10b981; }
-            50% { background-color: #059669; }
+
+        .subtitle {
+            margin: 10px 0 0 0;
+            font-size: 1.1em;
+            opacity: 0.9;
         }
-        @keyframes pulseRed {
-            0%, 100% { background-color: #ef4444; }
-            50% { background-color: #dc2626; }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .progress-bar {
+            background: #f0f0f0;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 3px solid #f0f0f0;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-content {
+            padding: 30px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .question-side {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        .answer-side {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            display: none;
+        }
+
+        .card.show-answer .question-side {
+            display: none;
+        }
+
+        .card.show-answer .answer-side {
+            display: flex;
+        }
+
+        .question-type {
+            background: rgba(255,255,255,0.8);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #666;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .error-highlight {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .correct-highlight {
+            background: #c6f6d5;
+            color: #2f855a;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .flowchart-box {
+            background: #4299e1;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            min-width: 120px;
+            font-size: 0.9em;
+            word-wrap: break-word;
+            max-width: 90%;
+        }
+
+        .flowchart-diamond {
+            background: #ed8936;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50%;
+            text-align: center;
+            font-weight: 600;
+            transform: rotate(45deg);
+            min-width: 80px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+        }
+
+        .flowchart-diamond span {
+            transform: rotate(-45deg);
+            word-wrap: break-word;
+            max-width: 60px;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #666;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #edf2f7;
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #4facfe;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .difficulty-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .easy { background: #c6f6d5; color: #2f855a; }
+        .medium { background: #feebc8; color: #c05621; }
+        .hard { background: #fed7d7; color: #c53030; }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                margin: 0;
+                border-radius: 15px;
+            }
+            
+            .main-content {
+                padding: 15px;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.6em;
+            }
+            
+            .subtitle {
+                font-size: 1em;
+            }
+            
+            .card-content {
+                padding: 20px 15px;
+                min-height: 250px;
+            }
+            
+            .code-block {
+                font-size: 0.85em;
+                padding: 15px;
+                overflow-x: auto;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 180px;
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .stat-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px;
+                background: white;
+                border-radius: 10px;
+            }
+            
+            .stat-number {
+                font-size: 1.5em;
+            }
+            
+            .flowchart-box {
+                min-width: 100px;
+                padding: 10px 15px;
+                font-size: 0.8em;
+            }
+            
+            .flowchart-diamond {
+                min-width: 70px;
+                min-height: 70px;
+                padding: 10px 15px;
+                font-size: 0.7em;
+            }
+            
+            .flowchart-diamond span {
+                max-width: 50px;
+            }
+            
+            .difficulty-badge {
+                top: 10px;
+                right: 10px;
+                font-size: 0.7em;
+                padding: 4px 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.4em;
+            }
+            
+            .card-content {
+                padding: 15px 10px;
+            }
+            
+            .code-block {
+                font-size: 0.8em;
+                padding: 12px;
+            }
+            
+            .btn {
+                width: 160px;
+                padding: 8px 16px;
+            }
+            
+            .flowchart-box {
+                min-width: 80px;
+                padding: 8px 12px;
+                font-size: 0.75em;
+            }
+            
+            .flowchart-diamond {
+                min-width: 60px;
+                min-height: 60px;
+                font-size: 0.65em;
+            }
         }
     </style>
-  <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
- </head>
- <body class="min-h-full">
-  <main class="min-h-full p-6">
-   <div class="max-w-4xl mx-auto"><!-- Header -->
-    <header class="text-center mb-8">
-     <div class="mb-6 p-6 rounded-xl border-2 bg-gradient-to-r from-cyan-500 to-emerald-500 text-white">
-      <div class="text-6xl mb-4">
-       🔢
-      </div>
-      <h1 id="main-title" class="text-3xl font-bold mb-4">PRAKTIS: Penukaran Nombor Perenambelasan kepada Nombor Perpuluhan</h1>
-      <p id="instructions" class="text-lg opacity-90">Bab 1.2 - Sistem Nombor Perenambelasan | Asas Sains Komputer Tingkatan 2</p>
-     </div><!-- Introduction Section -->
-     <div class="mb-8 p-4 sm:p-6 rounded-lg border-2 text-left">
-      <h2 class="text-xl sm:text-2xl font-bold mb-4 text-center">📚 Pengenalan</h2>
-      <div class="space-y-4">
-       <div class="p-3 sm:p-4 rounded-lg border border-cyan-300">
-        <h3 class="font-semibold text-base sm:text-lg mb-2">🎯 Objektif Pembelajaran:</h3>
-        <p class="text-sm sm:text-base">Murid dapat menukar nombor perenambelasan kepada nombor perpuluhan dengan menggunakan kaedah pengembangan kedudukan.</p>
-       </div>
-       <div class="p-3 sm:p-4 rounded-lg border border-emerald-300">
-        <h3 class="font-semibold text-base sm:text-lg mb-2">💡 Ingat Kembali:</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
-         <div><strong>Digit Perenambelasan:</strong><br>
-           0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F
-         </div>
-         <div><strong>Nilai Huruf:</strong><br>
-           A=10, B=11, C=12, D=13, E=14, F=15
-         </div>
-        </div>
-       </div>
-       <div class="p-3 sm:p-4 rounded-lg border border-purple-300">
-        <h3 class="font-semibold text-base sm:text-lg mb-2">📝 Contoh:</h3>
-        <div class="bg-gray-100 p-3 sm:p-4 rounded text-gray-800">
-         <div class="font-bold mb-2 text-sm sm:text-base">
-          Tukar 2A₁₆ kepada perpuluhan:
-         </div>
-         <div class="text-xs sm:text-sm space-y-1">
-          <div>
-           🔍 Langkah 1: 2A₁₆
-          </div>
-          <div>
-           🔢 Langkah 2: 2(kedudukan 1), A(kedudukan 0)
-          </div>
-          <div>
-           💡 Langkah 3: 2 = 2, A = 10
-          </div>
-          <div class="break-words">
-           ⚡ Langkah 4: 2 × 16¹ + 10 × 16⁰ = 2 × 16 + 10 × 1 = 32 + 10
-          </div>
-          <div class="font-bold text-purple-600">
-           ✅ Langkah 5: 42₁₀
-          </div>
-         </div>
-        </div>
-       </div>
-      </div>
-     </div>
-    </header><!-- Progress Section -->
-    <div class="mb-8 p-6 rounded-xl border-2 border-emerald-400 bg-gradient-to-r from-slate-800 to-slate-700 shadow-lg">
-     <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-semibold text-emerald-300">📊 Kemajuan Anda</h2>
-      <div class="text-sm bg-emerald-500 text-white px-3 py-1 rounded-full font-bold"><span id="correct-count">0</span> betul dari <span id="total-count">0</span> soalan
-      </div>
-     </div>
-     <div class="w-full h-6 bg-slate-600 rounded-full overflow-hidden shadow-inner">
-      <div id="progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-teal-400 transition-all duration-500 shadow-lg" style="width: 0%"></div>
-     </div>
-    </div><!-- Question Section -->
-    <div class="mb-8 p-4 sm:p-8 rounded-lg border-2 bg-gradient-to-br from-slate-800 to-slate-700 text-white">
-     <div class="text-center mb-6">
-      <div class="inline-block px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white font-bold mb-4">
-       Soalan <span id="question-number">1</span>
-      </div>
-      <div class="text-2xl sm:text-4xl font-bold mb-2 text-white">
-       Tukarkan <span id="hex-number" class="px-3 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-lg shadow-lg transform hover:scale-105 transition-transform">A3</span><sub class="text-cyan-400">16</sub> kepada perpuluhan
-      </div>
-     </div><!-- Answer Input -->
-     <div class="text-center mb-6"><label for="answer-input" class="block text-base sm:text-lg font-medium mb-3 text-cyan-300">💭 Jawapan anda:</label> <input type="number" id="answer-input" class="w-32 sm:w-40 p-3 sm:p-4 text-xl sm:text-2xl text-center border-2 border-cyan-400 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 bg-slate-600 text-white placeholder-slate-400 shadow-lg" placeholder="?">
-     </div><!-- Action Buttons -->
-     <div class="text-center flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"><button id="check-btn" class="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-white font-bold rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 transition-all duration-200 hover:scale-105 shadow-lg transform"> <span id="check-button-text">✅ Semak Jawapan</span> </button> <button id="next-btn" class="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 font-bold rounded-xl border-2 border-purple-400 bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-200 hover:scale-105 shadow-lg transform hidden"> <span id="next-button-text">➡️ Soalan Seterusnya</span> </button>
-     </div><!-- Feedback -->
-     <div id="feedback" class="mt-6 p-4 rounded-lg text-center hidden">
-      <div id="feedback-content"></div>
-     </div>
-    </div><!-- Results History -->
-    <div class="p-4 sm:p-6 rounded-xl border-2 border-purple-400 bg-gradient-to-r from-slate-800 to-slate-700 shadow-lg">
-     <h3 class="text-lg sm:text-xl font-semibold mb-4 text-purple-300">📋 Rekod Jawapan</h3>
-     <div id="results-list" class="space-y-3">
-      <p class="text-center text-slate-400 italic text-sm sm:text-base">Belum ada jawapan lagi. Mula jawab soalan! 🚀</p>
-     </div>
-    </div>
-   </div>
-  </main>
-  <script>
-        // Configuration
-        const defaultConfig = {
-            main_title: "PRAKTIS: Penukaran Nombor Perenambelasan kepada Nombor Perpuluhan",
-            instructions: "Bab 1.2 - Sistem Nombor Perenambelasan | Asas Sains Komputer Tingkatan 2",
-            check_button_text: "Semak Jawapan",
-            next_button_text: "Soalan Seterusnya",
-            background_color: "#0f172a",
-            surface_color: "#1e293b",
-            text_color: "#f1f5f9",
-            primary_color: "#06b6d4",
-            accent_color: "#10b981",
-            font_family: "Inter",
-            font_size: 16
-        };
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🔍 Flashcard Algoritma</h1>
+            <p class="subtitle">Mengesan & Membaiki Ralat dalam Pseudokod dan Carta Alir</p>
+        </header>
 
-        // Application state
-        let currentQuestion = null;
-        let questionCount = 0;
-        let correctCount = 0;
-        let allResults = [];
-        let isAnswered = false;
+        <main class="main-content">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
 
-        // Hex numbers for practice (easy to medium difficulty)
-        const hexNumbers = ['A', 'B', 'C', 'D', 'E', 'F', '1A', '2B', '3C', '4D', '5E', '6F', 'A1', 'B2', 'C3', 'D4', 'E5', 'F6', '1AB', '2CD', '3EF', 'ABC', 'DEF'];
-
-        // Local storage for results (no data sheet needed)
-        function saveResult(result) {
-            allResults.push(result);
-            // Keep only last 10 results to avoid memory issues
-            if (allResults.length > 10) {
-                allResults = allResults.slice(-10);
-            }
-            updateResultsDisplay();
-            updateProgress();
-        }
-
-        // Element SDK implementation
-        async function onConfigChange(config) {
-            const customFont = config.font_family || defaultConfig.font_family;
-            const baseSize = config.font_size || defaultConfig.font_size;
-            const baseFontStack = 'system-ui, -apple-system, sans-serif';
-
-            // Apply colors
-            document.body.style.backgroundColor = config.background_color || defaultConfig.background_color;
-            document.body.style.color = config.text_color || defaultConfig.text_color;
-
-            // Apply fonts
-            document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
-            document.getElementById('main-title').style.fontSize = `${baseSize * 1.875}px`;
-            document.getElementById('instructions').style.fontSize = `${baseSize * 1.125}px`;
-
-            // Update surface colors
-            const surfaces = document.querySelectorAll('.border-2');
-            surfaces.forEach(surface => {
-                surface.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
-                surface.style.borderColor = config.primary_color || defaultConfig.primary_color;
-            });
-
-            // Update button colors
-            const checkBtn = document.getElementById('check-btn');
-            const nextBtn = document.getElementById('next-btn');
-            checkBtn.style.backgroundColor = config.primary_color || defaultConfig.primary_color;
-            nextBtn.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
-            nextBtn.style.borderColor = config.primary_color || defaultConfig.primary_color;
-            nextBtn.style.color = config.primary_color || defaultConfig.primary_color;
-
-            // Update progress bar
-            document.getElementById('progress-bar').style.backgroundColor = config.accent_color || defaultConfig.accent_color;
-
-            // Update text content
-            document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
-            document.getElementById('instructions').textContent = config.instructions || defaultConfig.instructions;
-            document.getElementById('check-button-text').textContent = config.check_button_text || defaultConfig.check_button_text;
-            document.getElementById('next-button-text').textContent = config.next_button_text || defaultConfig.next_button_text;
-
-            // Update input focus colors
-            const input = document.getElementById('answer-input');
-            input.style.borderColor = config.primary_color || defaultConfig.primary_color;
-        }
-
-        function mapToCapabilities(config) {
-            return {
-                recolorables: [
-                    {
-                        get: () => config.background_color || defaultConfig.background_color,
-                        set: (value) => {
-                            if (window.elementSdk) {
-                                window.elementSdk.setConfig({ background_color: value });
-                            }
-                        }
-                    },
-                    {
-                        get: () => config.surface_color || defaultConfig.surface_color,
-                        set: (value) => {
-                            if (window.elementSdk) {
-                                window.elementSdk.setConfig({ surface_color: value });
-                            }
-                        }
-                    },
-                    {
-                        get: () => config.text_color || defaultConfig.text_color,
-                        set: (value) => {
-                            if (window.elementSdk) {
-                                window.elementSdk.setConfig({ text_color: value });
-                            }
-                        }
-                    },
-                    {
-                        get: () => config.primary_color || defaultConfig.primary_color,
-                        set: (value) => {
-                            if (window.elementSdk) {
-                                window.elementSdk.setConfig({ primary_color: value });
-                            }
-                        }
-                    },
-                    {
-                        get: () => config.accent_color || defaultConfig.accent_color,
-                        set: (value) => {
-                            if (window.elementSdk) {
-                                window.elementSdk.setConfig({ accent_color: value });
-                            }
-                        }
-                    }
-                ],
-                borderables: [],
-                fontEditable: {
-                    get: () => config.font_family || defaultConfig.font_family,
-                    set: (value) => {
-                        if (window.elementSdk) {
-                            window.elementSdk.setConfig({ font_family: value });
-                        }
-                    }
-                },
-                fontSizeable: {
-                    get: () => config.font_size || defaultConfig.font_size,
-                    set: (value) => {
-                        if (window.elementSdk) {
-                            window.elementSdk.setConfig({ font_size: value });
-                        }
-                    }
-                }
-            };
-        }
-
-        function mapToEditPanelValues(config) {
-            return new Map([
-                ["main_title", config.main_title || defaultConfig.main_title],
-                ["instructions", config.instructions || defaultConfig.instructions],
-                ["check_button_text", config.check_button_text || defaultConfig.check_button_text],
-                ["next_button_text", config.next_button_text || defaultConfig.next_button_text]
-            ]);
-        }
-
-        // Hex to decimal conversion
-        function hexToDecimal(hex) {
-            return parseInt(hex, 16);
-        }
-
-        // Generate step-by-step breakdown (Tingkatan 2 method)
-        function generateStepBreakdown(hex) {
-            const steps = [];
-            const digits = hex.split('').reverse();
-            
-            steps.push(`🔍 Langkah 1: Kenalpasti nombor perenambelasan → ${hex}₁₆`);
-            
-            // Show position values
-            let positionInfo = '🔢 Langkah 2: Tentukan kedudukan (dari kanan ke kiri):';
-            for (let i = digits.length - 1; i >= 0; i--) {
-                const digit = digits[i];
-                positionInfo += ` ${digit}(kedudukan ${i})`;
-            }
-            steps.push(positionInfo);
-            
-            // Show digit values
-            steps.push('💡 Langkah 3: Tukar huruf kepada nombor (jika ada):');
-            let digitValues = '';
-            for (let i = digits.length - 1; i >= 0; i--) {
-                const digit = digits[i];
-                const digitValue = isNaN(digit) ? (digit.charCodeAt(0) - 55) : parseInt(digit);
-                if (digitValues) digitValues += ', ';
-                digitValues += `${digit} = ${digitValue}`;
-            }
-            steps.push(`   ${digitValues}`);
-            
-            // Show calculation using expansion method
-            steps.push('⚡ Langkah 4: Guna kaedah pengembangan kedudukan:');
-            let calculation = '';
-            let total = 0;
-            
-            for (let i = 0; i < digits.length; i++) {
-                const digit = digits[i];
-                const digitValue = isNaN(digit) ? (digit.charCodeAt(0) - 55) : parseInt(digit);
-                const positionValue = Math.pow(16, i);
-                const result = digitValue * positionValue;
+            <div class="card" id="flashcard">
+                <div class="difficulty-badge easy" id="difficultyBadge">Mudah</div>
                 
-                if (i > 0) calculation += ' + ';
-                calculation += `${digitValue} × 16^${i}`;
-                if (positionValue !== 1) calculation += ` = ${digitValue} × ${positionValue}`;
-                calculation += ` = ${result}`;
-                
-                total += result;
-            }
-            
-            steps.push(`   ${calculation}`);
-            steps.push(`✅ Langkah 5: Jumlahkan semua → ${total}₁₀`);
-            
-            return steps;
-        }
-
-        // Generate new question
-        function generateQuestion() {
-            const hex = hexNumbers[Math.floor(Math.random() * hexNumbers.length)];
-            const decimal = hexToDecimal(hex);
-            
-            currentQuestion = {
-                hex: hex,
-                decimal: decimal,
-                steps: generateStepBreakdown(hex)
-            };
-            
-            questionCount++;
-            isAnswered = false;
-            
-            // Update UI
-            document.getElementById('question-number').textContent = questionCount;
-            document.getElementById('hex-number').textContent = hex;
-            document.getElementById('answer-input').value = '';
-            document.getElementById('answer-input').disabled = false;
-            document.getElementById('check-btn').classList.remove('hidden');
-            document.getElementById('next-btn').classList.add('hidden');
-            document.getElementById('feedback').classList.add('hidden');
-            
-
-        }
-
-        // Check answer
-        async function checkAnswer() {
-            if (isAnswered) return;
-            
-            const userAnswerInput = document.getElementById('answer-input').value.trim();
-            
-            // Check if input is empty or not a valid number
-            if (!userAnswerInput || isNaN(userAnswerInput)) {
-                showFeedback(false, '⚠️ Sila masukkan nombor yang sah!');
-                return;
-            }
-            
-            const userAnswer = parseInt(userAnswerInput);
-            const isCorrect = userAnswer === currentQuestion.decimal;
-            
-            isAnswered = true;
-            
-            // Show loading state
-            const checkBtn = document.getElementById('check-btn');
-            const originalText = checkBtn.innerHTML;
-            checkBtn.innerHTML = '⏳ Menyemak...';
-            checkBtn.disabled = true;
-            
-            // Save result locally (no data sheet needed)
-            const result = {
-                question: `${currentQuestion.hex}₁₆ → ${currentQuestion.decimal}₁₀`,
-                user_answer: userAnswer.toString(),
-                correct_answer: currentQuestion.decimal.toString(),
-                is_correct: isCorrect,
-                timestamp: new Date().toISOString()
-            };
-            
-            saveResult(result);
-            
-            // Update UI
-            checkBtn.innerHTML = originalText;
-            checkBtn.disabled = false;
-            
-            if (isCorrect) {
-                correctCount++;
-                showFeedback(true, `🎉 Betul! ${currentQuestion.hex}₁₆ = ${currentQuestion.decimal}₁₀`);
-                checkBtn.classList.add('pulse-correct');
-            } else {
-                showFeedback(false, `❌ Tidak betul. Jawapan yang betul ialah ${currentQuestion.decimal}₁₀`);
-                checkBtn.classList.add('pulse-wrong');
-            }
-            
-            // Remove animation class after animation completes
-            setTimeout(() => {
-                checkBtn.classList.remove('pulse-correct', 'pulse-wrong');
-            }, 600);
-            
-            document.getElementById('answer-input').disabled = true;
-            document.getElementById('check-btn').classList.add('hidden');
-            document.getElementById('next-btn').classList.remove('hidden');
-        }
-
-        // Show feedback
-        function showFeedback(isCorrect, message) {
-            const feedback = document.getElementById('feedback');
-            const content = document.getElementById('feedback-content');
-            
-            content.innerHTML = `
-                <div class="text-lg font-semibold">${message}</div>
-                <div class="mt-2 text-sm">
-                    Pengiraan: ${currentQuestion.steps.slice(-2).join(' → ')}
+                <div class="card-content question-side" id="questionSide">
+                    <div class="question-type" id="questionType">Pseudokod - Ralat Logik</div>
+                    <h3 id="questionTitle">Kenal pasti ralat dalam pseudokod berikut:</h3>
+                    <div class="code-block" id="questionCode">
+                        MULA<br>
+                        BACA umur<br>
+                        JIKA umur > 18 MAKA<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;PAPAR "Dewasa"<br>
+                        JIKA umur < 18 MAKA<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;PAPAR "Kanak-kanak"<br>
+                        TAMAT
+                    </div>
+                    <p><strong>Soalan:</strong> <span id="questionText">Apakah yang akan berlaku jika umur = 18?</span></p>
                 </div>
-            `;
-            
-            if (isCorrect) {
-                feedback.className = 'mt-6 p-4 rounded-lg text-center fade-in';
-                feedback.style.backgroundColor = window.elementSdk?.config?.accent_color || defaultConfig.accent_color;
-                feedback.style.color = 'white';
-            } else {
-                feedback.className = 'mt-6 p-4 rounded-lg text-center fade-in';
-                feedback.style.backgroundColor = '#ef4444';
-                feedback.style.color = 'white';
-            }
-            
-            feedback.classList.remove('hidden');
-        }
 
-        // Update progress
-        function updateProgress() {
-            document.getElementById('correct-count').textContent = correctCount;
-            document.getElementById('total-count').textContent = questionCount;
-            
-            const percentage = questionCount > 0 ? (correctCount / questionCount) * 100 : 0;
-            document.getElementById('progress-bar').style.width = `${percentage}%`;
-        }
-
-        // Update results display
-        function updateResultsDisplay() {
-            const container = document.getElementById('results-list');
-            
-            if (allResults.length === 0) {
-                container.innerHTML = '<p class="text-center text-slate-400 italic text-sm sm:text-base">Belum ada jawapan lagi. Mula jawab soalan! 🚀</p>';
-                return;
-            }
-            
-            // Show last 5 results
-            const recentResults = allResults.slice(-5).reverse();
-            container.innerHTML = recentResults.map(result => `
-                <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center p-4 rounded-lg border-2 ${result.is_correct ? 'border-green-400 bg-green-900/30' : 'border-red-400 bg-red-900/30'} shadow-md gap-3">
-                    <span class="font-medium text-base text-white">${result.question}</span>
-                    <div class="flex flex-col lg:flex-row lg:items-center gap-3">
-                        <span class="text-sm px-3 py-2 rounded bg-slate-600 text-white text-center">Jawapan: ${result.user_answer}</span>
-                        <span class="${result.is_correct ? 'text-white bg-green-500' : 'text-white bg-red-500'} font-bold px-4 py-2 rounded-full shadow-lg text-sm text-center">
-                            ${result.is_correct ? '✓ BETUL' : '✗ SALAH'}
-                        </span>
+                <div class="card-content answer-side" id="answerSide">
+                    <div class="question-type">Jawapan & Penjelasan</div>
+                    <h3>🎯 Ralat yang dikesan:</h3>
+                    <div id="answerContent">
+                        <p><strong>Masalah:</strong> Tiada pengendalian untuk umur = 18 (missing condition)</p>
+                        
+                        <h4>Pseudokod yang diperbaiki:</h4>
+                        <div class="code-block">
+                            MULA<br>
+                            BACA umur<br>
+                            JIKA umur <span class="correct-highlight">>=</span> 18 MAKA<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;PAPAR "Dewasa"<br>
+                            <span class="correct-highlight">SELAIN ITU</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;PAPAR "Kanak-kanak"<br>
+                            TAMAT
+                        </div>
+                        
+                        <p><strong>Penjelasan:</strong> Gunakan >= untuk memasukkan umur 18, atau gunakan struktur JIKA-SELAIN ITU untuk memastikan semua kes ditangani.</p>
                     </div>
                 </div>
-            `).join('');
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-secondary" id="prevBtn" onclick="previousCard()">⬅️ Sebelum</button>
+                <button class="btn btn-primary" id="flipBtn" onclick="flipCard()">🔄 Tunjuk Jawapan</button>
+                <button class="btn btn-secondary" id="nextBtn" onclick="nextCard()">Seterusnya ➡️</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="currentCard">1</div>
+                    <div class="stat-label">Kad Semasa</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalCards">6</div>
+                    <div class="stat-label">Jumlah Kad</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="completedCards">0</div>
+                    <div class="stat-label">Selesai</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const flashcards = [
+            {
+                type: "Ralat Sintaks - Pseudokod",
+                difficulty: "easy",
+                title: "Kenal pasti ralat sintaks dalam pseudokod:",
+                code: `MULA
+BACA nama, umur
+JIKA umur >= 18 MAKA
+    PAPAR "Dewasa"
+SELAIN ITU
+    PAPAR "Kanak-kanak"
+JIKA TAMAT
+TAMAT`,
+                question: "Terdapat ralat sintaks dalam pseudokod ini. Di manakah?",
+                answer: {
+                    problem: "Ralat sintaks: 'JIKA TAMAT' sepatutnya 'TAMAT JIKA'",
+                    solution: `MULA
+BACA nama, umur
+JIKA umur >= 18 MAKA
+    PAPAR "Dewasa"
+SELAIN ITU
+    PAPAR "Kanak-kanak"
+TAMAT JIKA
+TAMAT`,
+                    explanation: "Ralat sintaks berlaku apabila struktur bahasa tidak mengikut peraturan yang ditetapkan. 'TAMAT JIKA' adalah sintaks yang betul untuk menutup struktur keputusan."
+                }
+            },
+            {
+                type: "Ralat Logik - Pseudokod",
+                difficulty: "medium",
+                title: "Kenal pasti ralat logik dalam pseudokod:",
+                code: `MULA
+BACA umur
+JIKA umur > 18 MAKA
+    PAPAR "Dewasa"
+JIKA umur < 18 MAKA
+    PAPAR "Kanak-kanak"
+TAMAT JIKA
+TAMAT`,
+                question: "Pseudokod ini tidak mempunyai ralat sintaks, tetapi ada ralat logik. Apakah itu?",
+                answer: {
+                    problem: "Ralat logik: Tiada pengendalian untuk umur = 18 (kes terlepas)",
+                    solution: `MULA
+BACA umur
+JIKA umur >= 18 MAKA
+    PAPAR "Dewasa"
+SELAIN ITU
+    PAPAR "Kanak-kanak"
+TAMAT JIKA
+TAMAT`,
+                    explanation: "Ralat logik berlaku apabila program berjalan tanpa ralat tetapi tidak menghasilkan output yang betul. Dalam kes ini, umur tepat 18 tidak dikendalikan."
+                }
+            },
+            {
+                type: "Ralat Masa Larian - Pseudokod",
+                difficulty: "hard",
+                title: "Kenal pasti ralat masa larian dalam pseudokod:",
+                code: `MULA
+BACA pembahagi
+hasil = 100 / pembahagi
+PAPAR "Hasil:", hasil
+TAMAT`,
+                question: "Pseudokod ini boleh menyebabkan ralat masa larian. Bila?",
+                answer: {
+                    problem: "Ralat masa larian: Pembahagian dengan sifar jika pengguna masukkan 0",
+                    solution: `MULA
+BACA pembahagi
+JIKA pembahagi != 0 MAKA
+    hasil = 100 / pembahagi
+    PAPAR "Hasil:", hasil
+SELAIN ITU
+    PAPAR "Ralat: Tidak boleh bahagi dengan sifar"
+TAMAT JIKA
+TAMAT`,
+                    explanation: "Ralat masa larian berlaku semasa program berjalan apabila operasi tidak sah dilakukan (seperti bahagi dengan sifar). Program akan berhenti secara tidak dijangka."
+                }
+            },
+            {
+                type: "Ralat Sintaks - Carta Alir",
+                difficulty: "medium",
+                title: "Carta alir berikut mempunyai ralat sintaks:",
+                code: `<div class="flowchart">
+                    <div class="flowchart-box" style="background: #48bb78;">MULA</div>
+                    <div class="arrow">↓</div>
+                    <div class="flowchart-box">BACA A, B</div>
+                    <div class="arrow">↓</div>
+                    <div class="flowchart-diamond"><span>A > B</span></div>
+                    <div style="display: flex; gap: 50px; align-items: center;">
+                        <div style="text-align: center;">
+                            <div>YA</div>
+                            <div class="arrow">↓</div>
+                            <div class="flowchart-box">PAPAR A</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div>TIDAK</div>
+                            <div class="arrow">↓</div>
+                            <div class="flowchart-box">PAPAR B</div>
+                        </div>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="flowchart-box" style="background: #f56565; color: white;">TAMAT</div>
+                    <div class="arrow">↓</div>
+                    <div class="flowchart-box" style="background: #f56565; color: white;">TAMAT</div>
+                </div>`,
+                question: "Apakah ralat sintaks dalam carta alir ini?",
+                answer: {
+                    problem: "Ralat sintaks: Dua kotak TAMAT - carta alir hanya boleh ada satu titik tamat",
+                    solution: `<div class="flowchart">
+                        <div class="flowchart-box" style="background: #48bb78;">MULA</div>
+                        <div class="arrow">↓</div>
+                        <div class="flowchart-box">BACA A, B</div>
+                        <div class="arrow">↓</div>
+                        <div class="flowchart-diamond"><span>A > B</span></div>
+                        <div style="display: flex; gap: 50px; align-items: center;">
+                            <div style="text-align: center;">
+                                <div>YA</div>
+                                <div class="arrow">↓</div>
+                                <div class="flowchart-box">PAPAR A</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div>TIDAK</div>
+                                <div class="arrow">↓</div>
+                                <div class="flowchart-box">PAPAR B</div>
+                            </div>
+                        </div>
+                        <div class="arrow">↓</div>
+                        <div class="flowchart-box" style="background: #48bb78;">TAMAT</div>
+                    </div>`,
+                    explanation: "Ralat sintaks dalam carta alir: Setiap carta alir mesti mempunyai tepat satu kotak MULA dan satu kotak TAMAT. Semua laluan mesti bertemu di titik tamat yang sama."
+                }
+            },
+            {
+                type: "Ralat Logik - Carta Alir",
+                difficulty: "hard",
+                title: "Carta alir untuk menentukan nombor genap atau ganjil:",
+                code: `<div class="flowchart">
+                    <div class="flowchart-box" style="background: #48bb78;">MULA</div>
+                    <div class="arrow">↓</div>
+                    <div class="flowchart-box">BACA nombor</div>
+                    <div class="arrow">↓</div>
+                    <div class="flowchart-diamond"><span>nombor > 0</span></div>
+                    <div style="display: flex; gap: 50px; align-items: center;">
+                        <div style="text-align: center;">
+                            <div>YA</div>
+                            <div class="arrow">↓</div>
+                            <div class="flowchart-box">PAPAR "Genap"</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div>TIDAK</div>
+                            <div class="arrow">↓</div>
+                            <div class="flowchart-box">PAPAR "Ganjil"</div>
+                        </div>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="flowchart-box" style="background: #48bb78;">TAMAT</div>
+                </div>`,
+                question: "Carta alir ini mempunyai ralat logik. Apakah masalahnya?",
+                answer: {
+                    problem: "Ralat logik: Keputusan salah - sepatutnya semak nombor % 2 = 0, bukan nombor > 0",
+                    solution: `<div class="flowchart">
+                        <div class="flowchart-box" style="background: #48bb78;">MULA</div>
+                        <div class="arrow">↓</div>
+                        <div class="flowchart-box">BACA nombor</div>
+                        <div class="arrow">↓</div>
+                        <div class="flowchart-diamond"><span>nombor % 2 = 0</span></div>
+                        <div style="display: flex; gap: 50px; align-items: center;">
+                            <div style="text-align: center;">
+                                <div>YA</div>
+                                <div class="arrow">↓</div>
+                                <div class="flowchart-box">PAPAR "Genap"</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div>TIDAK</div>
+                                <div class="arrow">↓</div>
+                                <div class="flowchart-box">PAPAR "Ganjil"</div>
+                            </div>
+                        </div>
+                        <div class="arrow">↓</div>
+                        <div class="flowchart-box" style="background: #48bb78;">TAMAT</div>
+                    </div>`,
+                    explanation: "Ralat logik: Untuk menentukan genap/ganjil, kita perlu semak baki pembahagian dengan 2 (nombor % 2), bukan sama ada nombor positif atau negatif."
+                }
+            },
+            {
+                type: "Ralat Masa Larian - Carta Alir",
+                difficulty: "hard",
+                title: "Carta alir untuk mengira purata:",
+                code: `<div class="flowchart">
+                    <div class="flowchart-box" style="background: #48bb78;">MULA</div>
+                    <div class="arrow">↓</div>
+                    <div class="flowchart-box">BACA jumlah, bilangan</div>
+                    <div class="arrow">↓</div>
+                    <div class="flowchart-box">purata = jumlah / bilangan</div>
+                    <div class="arrow">↓</div>
+                    <div class="flowchart-box">PAPAR purata</div>
+                    <div class="arrow">↓</div>
+                    <div class="flowchart-box" style="background: #48bb78;">TAMAT</div>
+                </div>`,
+                question: "Carta alir ini boleh menyebabkan ralat masa larian. Bila?",
+                answer: {
+                    problem: "Ralat masa larian: Pembahagian dengan sifar jika bilangan = 0",
+                    solution: `<div class="flowchart">
+                        <div class="flowchart-box" style="background: #48bb78;">MULA</div>
+                        <div class="arrow">↓</div>
+                        <div class="flowchart-box">BACA jumlah, bilangan</div>
+                        <div class="arrow">↓</div>
+                        <div class="flowchart-diamond"><span>bilangan ≠ 0</span></div>
+                        <div style="display: flex; gap: 50px; align-items: center; justify-content: center;">
+                            <div style="text-align: center;">
+                                <div>YA</div>
+                                <div class="arrow">↓</div>
+                                <div class="flowchart-box">purata = jumlah / bilangan</div>
+                                <div class="arrow">↓</div>
+                                <div class="flowchart-box">PAPAR purata</div>
+                                <div class="arrow">↓</div>
+                                <div style="color: transparent;">.</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div>TIDAK</div>
+                                <div class="arrow">↓</div>
+                                <div class="flowchart-box" style="background: #f56565;">PAPAR "Ralat"</div>
+                                <div class="arrow">↓</div>
+                                <div style="color: transparent;">.</div>
+                            </div>
+                        </div>
+                        <div class="flowchart-box" style="background: #48bb78;">TAMAT</div>
+                    </div>`,
+                    explanation: "Ralat masa larian berlaku apabila operasi tidak sah dilakukan semasa program berjalan. Pembahagian dengan sifar akan menyebabkan program berhenti secara tidak dijangka."
+                }
+            }
+        ];
+
+        let currentCardIndex = 0;
+        let completedCount = 0;
+        let isFlipped = false;
+
+        function updateCard() {
+            const card = flashcards[currentCardIndex];
+            const questionSide = document.getElementById('questionSide');
+            const answerSide = document.getElementById('answerSide');
+            
+            // Reset flip state
+            isFlipped = false;
+            document.getElementById('flashcard').classList.remove('show-answer');
+            document.getElementById('flipBtn').textContent = '🔄 Tunjuk Jawapan';
+            
+            // Update difficulty badge
+            const badge = document.getElementById('difficultyBadge');
+            badge.className = `difficulty-badge ${card.difficulty}`;
+            badge.textContent = card.difficulty === 'easy' ? 'Mudah' : 
+                               card.difficulty === 'medium' ? 'Sederhana' : 'Sukar';
+            
+            // Update question side
+            document.getElementById('questionType').textContent = card.type;
+            document.getElementById('questionTitle').textContent = card.title;
+            if (card.code.includes('<div class="flowchart">')) {
+                document.getElementById('questionCode').innerHTML = card.code;
+            } else {
+                document.getElementById('questionCode').innerHTML = card.code.replace(/\n/g, '<br>');
+            }
+            document.getElementById('questionText').textContent = card.question;
+            
+            // Update answer side
+            const solutionContent = card.answer.solution.includes('<div class="flowchart">') ? 
+                card.answer.solution : 
+                `<div class="code-block">${card.answer.solution.replace(/\n/g, '<br>')}</div>`;
+            
+            document.getElementById('answerContent').innerHTML = `
+                <p><strong>Masalah:</strong> ${card.answer.problem}</p>
+                
+                <h4>Penyelesaian yang diperbaiki:</h4>
+                ${solutionContent}
+                
+                <p><strong>Penjelasan:</strong> ${card.answer.explanation}</p>
+            `;
+            
+            // Update progress and stats
+            updateProgress();
+            updateStats();
         }
 
-        // Event listeners
-        document.getElementById('check-btn').addEventListener('click', checkAnswer);
-        document.getElementById('next-btn').addEventListener('click', generateQuestion);
-        
-        document.getElementById('answer-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !isAnswered) {
-                checkAnswer();
+        function updateProgress() {
+            const progress = ((currentCardIndex + 1) / flashcards.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function updateStats() {
+            document.getElementById('currentCard').textContent = currentCardIndex + 1;
+            document.getElementById('totalCards').textContent = flashcards.length;
+            document.getElementById('completedCards').textContent = completedCount;
+        }
+
+        function flipCard() {
+            const card = document.getElementById('flashcard');
+            const flipBtn = document.getElementById('flipBtn');
+            
+            if (!isFlipped) {
+                card.classList.add('show-answer');
+                flipBtn.textContent = '🔄 Tunjuk Soalan';
+                isFlipped = true;
+                if (currentCardIndex + 1 > completedCount) {
+                    completedCount = currentCardIndex + 1;
+                    updateStats();
+                }
+            } else {
+                card.classList.remove('show-answer');
+                flipBtn.textContent = '🔄 Tunjuk Jawapan';
+                isFlipped = false;
+            }
+        }
+
+        function nextCard() {
+            if (currentCardIndex < flashcards.length - 1) {
+                currentCardIndex++;
+                updateCard();
+            }
+        }
+
+        function previousCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                updateCard();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight' || event.key === ' ') {
+                event.preventDefault();
+                if (isFlipped) {
+                    nextCard();
+                } else {
+                    flipCard();
+                }
+            } else if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                previousCard();
+            } else if (event.key === 'Enter') {
+                event.preventDefault();
+                flipCard();
             }
         });
 
-        // Initialize application
-        async function init() {
-            // Initialize Element SDK
-            if (window.elementSdk) {
-                await window.elementSdk.init({
-                    defaultConfig,
-                    onConfigChange,
-                    mapToCapabilities,
-                    mapToEditPanelValues
-                });
+        // Touch/swipe navigation for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function(event) {
+            touchStartX = event.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(event) {
+            touchEndX = event.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const swipeDistance = touchEndX - touchStartX;
+            
+            if (Math.abs(swipeDistance) > swipeThreshold) {
+                if (swipeDistance > 0) {
+                    // Swipe right - previous card
+                    previousCard();
+                } else {
+                    // Swipe left - next card or flip
+                    if (isFlipped) {
+                        nextCard();
+                    } else {
+                        flipCard();
+                    }
+                }
             }
-            
-            // Apply initial config
-            await onConfigChange(defaultConfig);
-            
-            // Generate first question
-            generateQuestion();
         }
 
-        // Start the application
-        init();
+        // Double tap to flip card
+        let lastTap = 0;
+        document.addEventListener('touchend', function(event) {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            if (tapLength < 500 && tapLength > 0) {
+                event.preventDefault();
+                flipCard();
+            }
+            lastTap = currentTime;
+        });
+
+        // Initialize
+        updateCard();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'995169b534d6ace9',t:'MTc2MTU1OTkyNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99511dcc31a8cc5f',t:'MTc2MTU1NjgxNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
