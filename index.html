@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuiz: Nombor Perlapanan ke Perpuluhan</title>
+    <title>Perwakilan Data - Perpuluhan ke Perlapanan</title>
     <style>
         body {
             box-sizing: border-box;
@@ -14,457 +14,381 @@
             min-height: 100%;
             color: #333;
         }
-        
+
         html {
             height: 100%;
         }
-        
+
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
         }
-        
+
         .header {
-            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
             padding: 30px;
             text-align: center;
-            color: white;
         }
-        
+
         .header h1 {
             margin: 0;
-            font-size: 2.2em;
+            font-size: 2rem;
             font-weight: bold;
         }
-        
+
         .header p {
             margin: 10px 0 0 0;
-            font-size: 1.1em;
+            font-size: 1.1rem;
             opacity: 0.9;
         }
-        
-        .quiz-content {
-            padding: 40px;
-        }
-        
-        .progress-bar {
-            background: #e9ecef;
-            border-radius: 10px;
-            height: 12px;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            background: linear-gradient(90deg, #48cae4, #0077b6);
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.3s ease;
-            width: 0%;
-        }
-        
-        .question-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 15px;
+
+        .content {
             padding: 30px;
+        }
+
+        .section {
             margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 15px;
             border-left: 5px solid #ff6b6b;
         }
-        
-        .question-number {
-            color: #ff6b6b;
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-bottom: 15px;
+
+        .theory {
+            background: linear-gradient(135deg, #e8f5e8, #f0fff0);
         }
-        
-        .question-text {
-            font-size: 1.3em;
-            font-weight: 600;
-            margin-bottom: 20px;
+
+        .interactive {
+            background: linear-gradient(135deg, #e3f2fd, #f0f8ff);
+        }
+
+        .example {
+            background: linear-gradient(135deg, #fff3e0, #fffaf0);
+        }
+
+        .section h2 {
             color: #2c3e50;
+            margin-top: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        
-        .binary-display {
-            background: #2c3e50;
-            color: #00ff88;
-            font-family: 'Courier New', monospace;
-            font-size: 2em;
-            font-weight: bold;
+
+        .steps {
+            background: white;
             padding: 20px;
             border-radius: 10px;
-            text-align: center;
             margin: 20px 0;
-            letter-spacing: 3px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        
-        .options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 25px;
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #4ecdc4;
         }
-        
-        .option-btn {
-            background: linear-gradient(135deg, #74b9ff, #0984e3);
+
+        .step-number {
+            background: #4ecdc4;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .calculator {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #4ecdc4;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
             color: white;
             border: none;
-            padding: 18px 25px;
-            border-radius: 12px;
-            font-size: 1.1em;
-            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(116, 185, 255, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 5px;
         }
-        
-        .option-btn:hover {
+
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(116, 185, 255, 0.4);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
         }
-        
-        .option-btn.correct {
-            background: linear-gradient(135deg, #00b894, #00a085);
-            animation: correctPulse 0.6s ease;
-        }
-        
-        .option-btn.incorrect {
-            background: linear-gradient(135deg, #e17055, #d63031);
-            animation: shake 0.5s ease;
-        }
-        
-        .option-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-        
-        @keyframes correctPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        
-        .feedback {
+
+        .result {
             margin-top: 20px;
             padding: 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            text-align: center;
-            display: none;
-        }
-        
-        .feedback.correct {
             background: linear-gradient(135deg, #d4edda, #c3e6cb);
-            color: #155724;
-            border: 2px solid #c3e6cb;
-        }
-        
-        .feedback.incorrect {
-            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-            color: #721c24;
-            border: 2px solid #f5c6cb;
-        }
-        
-        .next-btn {
-            background: linear-gradient(135deg, #fd79a8, #e84393);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 1.1em;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-            display: none;
-        }
-        
-        .next-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(253, 121, 168, 0.4);
-        }
-        
-        .score-display {
-            text-align: center;
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            color: #2c3e50;
-        }
-        
-        .final-score {
-            text-align: center;
-            padding: 40px;
-            background: linear-gradient(135deg, #a8e6cf, #88d8a3);
-            border-radius: 15px;
-            margin-top: 30px;
-        }
-        
-        .final-score h2 {
-            color: #2c3e50;
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-        
-        .restart-btn {
-            background: linear-gradient(135deg, #6c5ce7, #5f3dc4);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 1.1em;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-        }
-        
-        .restart-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
-        }
-        
-        .explanation {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
             border-radius: 10px;
-            padding: 15px;
-            margin-top: 15px;
-            color: #856404;
-            display: none;
+            border-left: 4px solid #28a745;
         }
-        
-        .explanation h4 {
-            margin: 0 0 10px 0;
-            color: #d63031;
+
+        .calculation-steps {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .step-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .step-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            background: #e8f5e8;
+            margin: 10px -20px -20px -20px;
+            padding: 15px 20px;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .step {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .step-number {
+                margin-right: 0;
+            }
         }
     </style>
 </head>
 <body>
     <main class="container">
         <header class="header">
-            <h1>🔢 Kuiz Perwakilan Data</h1>
-            <p>Tingkatan 2 - Bab 1.1: Menukar Nombor Perlapanan kepada Perpuluhan</p>
+            <h1>📊 Perwakilan Data</h1>
+            <p>Bab 1: Menukar Nombor Perpuluhan kepada Nombor Perlapanan</p>
         </header>
-        
-        <div class="quiz-content">
-            <div class="score-display">
-                <strong>Skor: <span id="score">0</span>/10</strong>
-            </div>
-            
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressBar"></div>
-            </div>
-            
-            <div id="questionContainer">
-                <!-- Soalan akan dipaparkan di sini -->
-            </div>
-            
-            <div id="finalScore" class="final-score" style="display: none;">
-                <h2>🎉 Tahniah!</h2>
-                <p id="finalScoreText"></p>
-                <p id="gradeText"></p>
-                <button class="restart-btn" onclick="restartQuiz()">Mula Semula</button>
-            </div>
+
+        <div class="content">
+            <section class="section theory">
+                <h2>🎯 Apakah Nombor Perlapanan?</h2>
+                <p><strong>Nombor Perlapanan (Octal)</strong> menggunakan asas 8 dengan digit 0, 1, 2, 3, 4, 5, 6, 7 sahaja.</p>
+                <p>Contoh: 25₁₀ = 31₈ (dibaca "tiga satu perlapanan")</p>
+            </section>
+
+            <section class="section theory">
+                <h2>📝 Kaedah Bahagi dengan 8</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>Bahagikan nombor perpuluhan dengan 8</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>Tulis hasil bahagi dan baki</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>Ulang langkah 1-2 dengan hasil bahagi sehingga hasil = 0</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div>Baca semua baki dari bawah ke atas</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section example">
+                <h2>💡 Contoh: Tukar 25₁₀ kepada perlapanan</h2>
+                <div class="calculation-steps">
+                    <div class="step-row">
+                        <span>25 ÷ 8 =</span>
+                        <span>Hasil: <span class="highlight">3</span>, Baki: <span class="highlight">1</span></span>
+                    </div>
+                    <div class="step-row">
+                        <span>3 ÷ 8 =</span>
+                        <span>Hasil: <span class="highlight">0</span>, Baki: <span class="highlight">3</span></span>
+                    </div>
+                    <div class="step-row">
+                        <span>Jawapan (baca dari bawah ke atas):</span>
+                        <span><strong>31₈</strong></span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section interactive">
+                <h2>🧮 Kalkulator Interaktif</h2>
+                <div class="calculator">
+                    <div class="input-group">
+                        <label for="decimalInput">Masukkan nombor perpuluhan:</label>
+                        <input type="number" id="decimalInput" min="0" placeholder="Contoh: 25">
+                    </div>
+                    <button class="btn" onclick="convertToOctal()">🔄 Tukar ke Perlapanan</button>
+                    <button class="btn" onclick="clearCalculation()">🗑️ Padam</button>
+                    
+                    <div id="result" class="result" style="display: none;">
+                        <h3>📋 Hasil Penukaran:</h3>
+                        <div id="finalAnswer"></div>
+                        <div id="steps"></div>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 
     <script>
-        const questions = [
-            {
-                octal: "12",
-                correct: 10,
-                options: [8, 10, 12, 14]
-            },
-            {
-                octal: "15",
-                correct: 13,
-                options: [11, 12, 13, 15]
-            },
-            {
-                octal: "23",
-                correct: 19,
-                options: [17, 18, 19, 20]
-            },
-            {
-                octal: "37",
-                correct: 31,
-                options: [29, 30, 31, 32]
-            },
-            {
-                octal: "45",
-                correct: 37,
-                options: [35, 36, 37, 38]
-            },
-            {
-                octal: "67",
-                correct: 55,
-                options: [53, 54, 55, 56]
-            },
-            {
-                octal: "123",
-                correct: 83,
-                options: [81, 82, 83, 84]
-            },
-            {
-                octal: "156",
-                correct: 110,
-                options: [108, 109, 110, 111]
-            },
-            {
-                octal: "234",
-                correct: 156,
-                options: [154, 155, 156, 157]
-            },
-            {
-                octal: "345",
-                correct: 229,
-                options: [227, 228, 229, 230]
+        function convertToOctal() {
+            const decimal = parseInt(document.getElementById('decimalInput').value);
+            
+            if (isNaN(decimal) || decimal < 0) {
+                alert('Sila masukkan nombor yang sah (0 atau lebih besar)');
+                return;
             }
-        ];
 
-        let currentQuestion = 0;
-        let score = 0;
-        let answered = false;
+            const resultDiv = document.getElementById('result');
+            const finalAnswerDiv = document.getElementById('finalAnswer');
+            const stepsDiv = document.getElementById('steps');
 
-        function displayQuestion() {
-            const question = questions[currentQuestion];
-            const container = document.getElementById('questionContainer');
+            if (decimal === 0) {
+                finalAnswerDiv.innerHTML = `<h4>${decimal}₁₀ = 0₈</h4>`;
+                stepsDiv.innerHTML = '<p>Nombor 0 dalam mana-mana sistem nombor adalah 0.</p>';
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            let steps = [];
+            let remainders = [];
+            let current = decimal;
+            let stepNumber = 1;
+
+            // Perform conversion
+            while (current > 0) {
+                const quotient = Math.floor(current / 8);
+                const remainder = current % 8;
+                
+                steps.push({
+                    step: stepNumber,
+                    division: `${current} ÷ 8`,
+                    quotient: quotient,
+                    remainder: remainder
+                });
+                
+                remainders.push(remainder);
+                current = quotient;
+                stepNumber++;
+            }
+
+            // Build result
+            const octalResult = remainders.reverse().join('');
             
-            container.innerHTML = `
-                <div class="question-card">
-                    <div class="question-number">Soalan ${currentQuestion + 1} daripada ${questions.length}</div>
-                    <div class="question-text">Tukarkan nombor perlapanan berikut kepada nombor perpuluhan:</div>
-                    <div class="binary-display">${question.octal}₈</div>
-                    <div class="options">
-                        ${question.options.map(option => 
-                            `<button class="option-btn" onclick="selectAnswer(${option})">${option}</button>`
-                        ).join('')}
+            finalAnswerDiv.innerHTML = `<h4>${decimal}₁₀ = ${octalResult}₈</h4>`;
+            
+            let stepsHTML = '<div class="calculation-steps">';
+            steps.forEach((step, index) => {
+                stepsHTML += `
+                    <div class="step-row">
+                        <span>${step.division} =</span>
+                        <span>Hasil: <span class="highlight">${step.quotient}</span>, Baki: <span class="highlight">${step.remainder}</span></span>
                     </div>
-                    <div id="feedback" class="feedback"></div>
-                    <div id="explanation" class="explanation">
-                        <h4>Cara Pengiraan:</h4>
-                        <p id="calculationSteps"></p>
-                    </div>
-                    <button id="nextBtn" class="next-btn" onclick="nextQuestion()">Soalan Seterusnya</button>
-                </div>
-            `;
-            
-            answered = false;
-            updateProgress();
-        }
-
-        function selectAnswer(selectedAnswer) {
-            if (answered) return;
-            
-            answered = true;
-            const question = questions[currentQuestion];
-            const buttons = document.querySelectorAll('.option-btn');
-            const feedback = document.getElementById('feedback');
-            const explanation = document.getElementById('explanation');
-            const nextBtn = document.getElementById('nextBtn');
-            
-            buttons.forEach(btn => {
-                btn.disabled = true;
-                if (parseInt(btn.textContent) === question.correct) {
-                    btn.classList.add('correct');
-                } else if (parseInt(btn.textContent) === selectedAnswer) {
-                    btn.classList.add('incorrect');
-                }
+                `;
             });
             
-            if (selectedAnswer === question.correct) {
-                score++;
-                feedback.className = 'feedback correct';
-                feedback.textContent = '🎉 Betul! Jawapan anda tepat!';
-                document.getElementById('score').textContent = score;
-            } else {
-                feedback.className = 'feedback incorrect';
-                feedback.textContent = `❌ Salah! Jawapan yang betul ialah ${question.correct}`;
+            stepsHTML += `
+                <div class="step-row">
+                    <span>Jawapan (baca baki dari bawah ke atas):</span>
+                    <span><strong>${octalResult}₈</strong></span>
+                </div>
+            </div>`;
+            
+            stepsDiv.innerHTML = stepsHTML;
+            resultDiv.style.display = 'block';
+        }
+
+        function clearCalculation() {
+            document.getElementById('decimalInput').value = '';
+            document.getElementById('result').style.display = 'none';
+        }
+
+        // Allow Enter key to trigger conversion
+        document.getElementById('decimalInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                convertToOctal();
             }
-            
-            // Tunjukkan cara pengiraan
-            const steps = calculateOctalToDecimal(question.octal);
-            document.getElementById('calculationSteps').innerHTML = steps;
-            
-            feedback.style.display = 'block';
-            explanation.style.display = 'block';
-            nextBtn.style.display = 'inline-block';
-        }
-
-        function calculateOctalToDecimal(octal) {
-            let steps = `<strong>${octal}₈ = </strong>`;
-            let calculation = [];
-            let total = 0;
-            
-            for (let i = 0; i < octal.length; i++) {
-                const digit = parseInt(octal[i]);
-                const position = octal.length - 1 - i;
-                const value = digit * Math.pow(8, position);
-                
-                calculation.push(`${digit} × 8<sup>${position}</sup> = ${value}`);
-                total += value;
-            }
-            
-            steps += calculation.join(' + ');
-            steps += ` = <strong>${total}₁₀</strong>`;
-            
-            return steps;
-        }
-
-        function nextQuestion() {
-            currentQuestion++;
-            
-            if (currentQuestion < questions.length) {
-                displayQuestion();
-            } else {
-                showFinalScore();
-            }
-        }
-
-        function updateProgress() {
-            const progress = ((currentQuestion + 1) / questions.length) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-        }
-
-        function showFinalScore() {
-            document.getElementById('questionContainer').style.display = 'none';
-            document.getElementById('finalScore').style.display = 'block';
-            
-            const percentage = (score / questions.length) * 100;
-            let grade = '';
-            
-            if (percentage >= 90) grade = 'A+ - Cemerlang! 🌟';
-            else if (percentage >= 80) grade = 'A - Sangat Baik! 👏';
-            else if (percentage >= 70) grade = 'B - Baik! 👍';
-            else if (percentage >= 60) grade = 'C - Sederhana 📚';
-            else grade = 'Perlu lebih banyak latihan 💪';
-            
-            document.getElementById('finalScoreText').textContent = 
-                `Anda mendapat ${score} daripada ${questions.length} soalan betul (${percentage.toFixed(1)}%)`;
-            document.getElementById('gradeText').textContent = `Gred: ${grade}`;
-        }
-
-        function restartQuiz() {
-            currentQuestion = 0;
-            score = 0;
-            document.getElementById('score').textContent = '0';
-            document.getElementById('questionContainer').style.display = 'block';
-            document.getElementById('finalScore').style.display = 'none';
-            displayQuestion();
-        }
-
-        // Mula kuiz
-        displayQuestion();
+        });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'994eadca4320a559',t:'MTc2MTUzMTI1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'994ed50711ad2e0e',t:'MTc2MTUzMjg2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
