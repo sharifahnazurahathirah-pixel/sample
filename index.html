@@ -1,538 +1,496 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ms">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perwakilan Data - Perpuluhan ke Perlapanan</title>
-    <style>
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Latihan Sistem Nombor Perenambelasan</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
         body {
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100%;
-            color: #333;
         }
-
-        html {
-            height: 100%;
+        .hex-digit {
+            transition: all 0.3s ease;
         }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
+        .hex-digit:hover {
+            transform: scale(1.1);
         }
-
-        .header {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: white;
-            padding: 30px;
-            text-align: center;
+        .calculation-step {
+            animation: fadeIn 0.5s ease-in;
         }
-
-        .header h1 {
-            margin: 0;
-            font-size: 2rem;
-            font-weight: bold;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .header p {
-            margin: 10px 0 0 0;
-            font-size: 1.1rem;
-            opacity: 0.9;
+        .success-animation {
+            animation: bounce 0.6s ease-in-out;
         }
-
-        .content {
-            padding: 30px;
-        }
-
-        .section {
-            margin-bottom: 30px;
-            padding: 25px;
-            border-radius: 15px;
-            border-left: 5px solid #ff6b6b;
-        }
-
-        .theory {
-            background: linear-gradient(135deg, #e8f5e8, #f0fff0);
-        }
-
-        .interactive {
-            background: linear-gradient(135deg, #e3f2fd, #f0f8ff);
-        }
-
-        .example {
-            background: linear-gradient(135deg, #fff3e0, #fffaf0);
-        }
-
-        .section h2 {
-            color: #2c3e50;
-            margin-top: 0;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .steps {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .step {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #4ecdc4;
-        }
-
-        .step-number {
-            background: #4ecdc4;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 15px;
-            flex-shrink: 0;
-        }
-
-        .calculator {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            margin: 20px 0;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            transition: border-color 0.3s;
-        }
-
-        input[type="number"]:focus {
-            outline: none;
-            border-color: #4ecdc4;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #4ecdc4, #44a08d);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin: 5px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
-        }
-
-        .result {
-            margin-top: 20px;
-            padding: 20px;
-            background: linear-gradient(135deg, #d4edda, #c3e6cb);
-            border-radius: 10px;
-            border-left: 4px solid #28a745;
-        }
-
-        .calculation-steps {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 15px;
-            font-family: 'Courier New', monospace;
-        }
-
-        .step-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .step-row:last-child {
-            border-bottom: none;
-            font-weight: bold;
-            background: #e8f5e8;
-            margin: 10px -20px -20px -20px;
-            padding: 15px 20px;
-            border-radius: 0 0 10px 10px;
-        }
-
-        .highlight {
-            background: #fff3cd;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-
-        /* Mobile First Responsive Design */
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-            
-            .container {
-                margin: 0;
-                border-radius: 10px;
-            }
-            
-            .header {
-                padding: 15px;
-            }
-            
-            .header h1 {
-                font-size: 1.3rem;
-                line-height: 1.3;
-            }
-            
-            .header p {
-                font-size: 0.9rem;
-            }
-            
-            .content {
-                padding: 15px;
-            }
-            
-            .section {
-                padding: 15px;
-                margin-bottom: 20px;
-            }
-            
-            .section h2 {
-                font-size: 1.2rem;
-                flex-direction: column;
-                text-align: center;
-                gap: 5px;
-            }
-            
-            .step {
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
-                padding: 12px;
-            }
-            
-            .step-number {
-                margin-right: 0;
-                margin-bottom: 5px;
-            }
-            
-            .calculator {
-                padding: 15px;
-            }
-            
-            .btn {
-                width: 100%;
-                margin: 5px 0;
-                padding: 15px;
-                font-size: 1rem;
-            }
-            
-            .calculation-steps {
-                padding: 15px;
-                font-size: 0.9rem;
-            }
-            
-            .step-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-                padding: 10px 0;
-            }
-            
-            .step-row:last-child {
-                margin: 10px -15px -15px -15px;
-                padding: 15px;
-            }
-            
-            input[type="number"] {
-                font-size: 16px; /* Prevents zoom on iOS */
-            }
-        }
-
-        @media (min-width: 481px) and (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-            
-            .container {
-                margin: 0;
-                border-radius: 15px;
-            }
-            
-            .header {
-                padding: 25px 20px;
-            }
-            
-            .header h1 {
-                font-size: 1.7rem;
-            }
-            
-            .content {
-                padding: 25px 20px;
-            }
-            
-            .section {
-                padding: 20px;
-            }
-            
-            .section h2 {
-                font-size: 1.3rem;
-            }
-            
-            .calculator {
-                padding: 20px;
-            }
-            
-            .btn {
-                width: 48%;
-                display: inline-block;
-            }
-            
-            .step-row {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-        }
-
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .container {
-                margin: 20px auto;
-            }
-            
-            .header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .btn {
-                width: auto;
-                min-width: 150px;
-            }
-        }
-
-        /* Landscape orientation adjustments */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .header {
-                padding: 15px;
-            }
-            
-            .header h1 {
-                font-size: 1.3rem;
-            }
-            
-            .section {
-                margin-bottom: 15px;
-            }
-        }
-
-        /* Touch-friendly improvements */
-        @media (hover: none) and (pointer: coarse) {
-            .btn {
-                padding: 15px 25px;
-                font-size: 1.1rem;
-            }
-            
-            input[type="number"] {
-                padding: 15px;
-                font-size: 16px;
-            }
-            
-            .step {
-                padding: 18px;
-            }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
         }
     </style>
-</head>
-<body>
-    <main class="container">
-        <header class="header">
-            <h1>📊 Perwakilan Data</h1>
-            <p>Bab 1: Menukar Nombor Perpuluhan kepada Nombor Perlapanan</p>
-        </header>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="min-h-full bg-gradient-to-br from-blue-50 to-indigo-100">
+  <main class="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-4xl"><!-- Header -->
+   <header class="text-center mb-6 sm:mb-8">
+    <h1 id="app-title" class="text-2xl sm:text-3xl lg:text-4xl font-bold text-indigo-800 mb-4 px-2">Praktis Sistem Nombor Perenambelasan</h1><!-- Introduction -->
+    <div class="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4 sm:p-6 mb-4 sm:mb-6 border border-indigo-200">
+     <h2 class="text-lg sm:text-xl font-semibold text-indigo-700 mb-3">🎯 Pengenalan</h2>
+     <p class="text-sm sm:text-base text-gray-700 mb-3 leading-relaxed">Selamat datang ke praktis interaktif Sistem Nombor Perenambelasan! Dalam praktis ini, anda akan belajar cara menukar nombor perenambelasan kepada nombor perpuluhan.</p>
+     <div class="bg-white rounded-lg p-3 sm:p-4 border-l-4 border-indigo-400">
+      <p class="text-xs sm:text-sm text-gray-600 leading-relaxed"><strong>Objektif:</strong> Menguasai teknik penukaran nombor perenambelasan kepada perpuluhan menggunakan kaedah nilai tempat.</p>
+     </div>
+    </div>
+    <p id="instruction-text" class="text-base sm:text-lg text-gray-700 bg-white rounded-lg p-3 sm:p-4 shadow-md">Tukar nombor perenambelasan kepada nombor perpuluhan</p>
+   </header><!-- Reference Card -->
+   <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8">
+    <h2 class="text-lg sm:text-xl font-semibold text-indigo-700 mb-4">📚 Rujukan Sistem Perenambelasan</h2>
+    <div class="grid grid-cols-4 sm:grid-cols-8 gap-1 sm:gap-2 mb-3 sm:mb-4">
+     <div class="text-center p-1 sm:p-2 bg-indigo-50 rounded">
+      <div class="font-bold text-indigo-800 text-sm sm:text-base">
+       0
+      </div>
+      <div class="text-xs text-gray-600">
+       0
+      </div>
+     </div>
+     <div class="text-center p-1 sm:p-2 bg-indigo-50 rounded">
+      <div class="font-bold text-indigo-800 text-sm sm:text-base">
+       1
+      </div>
+      <div class="text-xs text-gray-600">
+       1
+      </div>
+     </div>
+     <div class="text-center p-1 sm:p-2 bg-indigo-50 rounded">
+      <div class="font-bold text-indigo-800 text-sm sm:text-base">
+       2
+      </div>
+      <div class="text-xs text-gray-600">
+       2
+      </div>
+     </div>
+     <div class="text-center p-1 sm:p-2 bg-indigo-50 rounded">
+      <div class="font-bold text-indigo-800 text-sm sm:text-base">
+       3
+      </div>
+      <div class="text-xs text-gray-600">
+       3
+      </div>
+     </div>
+     <div class="text-center p-1 sm:p-2 bg-indigo-50 rounded">
+      <div class="font-bold text-indigo-800 text-sm sm:text-base">
+       4
+      </div>
+      <div class="text-xs text-gray-600">
+       4
+      </div>
+     </div>
+     <div class="text-center p-1 sm:p-2 bg-indigo-50 rounded">
+      <div class="font-bold text-indigo-800 text-sm sm:text-base">
+       5
+      </div>
+      <div class="text-xs text-gray-600">
+       5
+      </div>
+     </div>
+     <div class="text-center p-1 sm:p-2 bg-indigo-50 rounded">
+      <div class="font-bold text-indigo-800 text-sm sm:text-base">
+       6
+      </div>
+      <div class="text-xs text-gray-600">
+       6
+      </div>
+     </div>
+     <div class="text-center p-1 sm:p-2 bg-indigo-50 rounded">
+      <div class="font-bold text-indigo-800 text-sm sm:text-base">
+       7
+      </div>
+      <div class="text-xs text-gray-600">
+       7
+      </div>
+     </div>
+    </div>
+    <div class="grid grid-cols-4 sm:grid-cols-8 gap-1 sm:gap-2">
+     <div class="text-center p-1 sm:p-2 bg-green-50 rounded">
+      <div class="font-bold text-green-800 text-sm sm:text-base">
+       8
+      </div>
+      <div class="text-xs text-gray-600">
+       8
+      </div>
+     </div>
+     <div class="text-center p-1 sm:p-2 bg-green-50 rounded">
+      <div class="font-bold text-green-800 text-sm sm:text-base">
+       9
+      </div>
+      <div class="text-xs text-gray-600">
+       9
+      </div>
+     </div>
+     <div class="text-center p-1 sm:p-2 bg-green-50 rounded">
+      <div class="font-bold text-green-800 text-sm sm:text-base">
+       A
+      </div>
+      <div class="text-xs text-gray-600">
+       10
+      </div>
+     </div>
+     <div class="text-center p-1 sm:p-2 bg-green-50 rounded">
+      <div class="font-bold text-green-800 text-sm sm:text-base">
+       B
+      </div>
+      <div class="text-xs text-gray-600">
+       11
+      </div>
+     </div>
+     <div class="text-center p-1 sm:p-2 bg-green-50 rounded">
+      <div class="font-bold text-green-800 text-sm sm:text-base">
+       C
+      </div>
+      <div class="text-xs text-gray-600">
+       12
+      </div>
+     </div>
+     <div class="text-center p-1 sm:p-2 bg-green-50 rounded">
+      <div class="font-bold text-green-800 text-sm sm:text-base">
+       D
+      </div>
+      <div class="text-xs text-gray-600">
+       13
+      </div>
+     </div>
+     <div class="text-center p-1 sm:p-2 bg-green-50 rounded">
+      <div class="font-bold text-green-800 text-sm sm:text-base">
+       E
+      </div>
+      <div class="text-xs text-gray-600">
+       14
+      </div>
+     </div>
+     <div class="text-center p-1 sm:p-2 bg-green-50 rounded">
+      <div class="font-bold text-green-800 text-sm sm:text-base">
+       F
+      </div>
+      <div class="text-xs text-gray-600">
+       15
+      </div>
+     </div>
+    </div>
+   </div><!-- Question Section -->
+   <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6">
+    <div class="text-center mb-4 sm:mb-6">
+     <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4">Soalan <span id="question-counter">1</span></h2>
+     <p class="text-sm sm:text-base lg:text-lg text-gray-600 mb-4 px-2">Tukarkan nombor perenambelasan ini kepada perpuluhan:</p><!-- Hex Number Display -->
+     <div class="flex justify-center items-center mb-4 sm:mb-6">
+      <div id="hex-display" class="text-2xl sm:text-3xl lg:text-4xl font-bold text-indigo-600 bg-indigo-50 px-4 sm:px-6 py-3 sm:py-4 rounded-lg border-2 border-indigo-200"><!-- Hex digits will be inserted here -->
+      </div><span class="text-lg sm:text-xl lg:text-2xl text-gray-500 ml-2">₁₆</span>
+     </div><!-- Step-by-step calculation -->
+     <div id="calculation-steps" class="bg-gray-50 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 hidden">
+      <h3 class="font-semibold text-gray-700 mb-3 text-sm sm:text-base">Langkah Pengiraan:</h3>
+      <div id="steps-content"></div>
+     </div><!-- Answer Input -->
+     <div class="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 mb-4 px-4"><input type="number" id="answer-input" placeholder="Jawapan anda" class="text-lg sm:text-xl px-3 sm:px-4 py-2 sm:py-3 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none w-full sm:w-48 text-center"> <span class="text-lg sm:text-xl text-gray-500">₁₀</span>
+     </div><!-- Buttons -->
+     <div class="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3 mb-4 px-2"><button id="check-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base w-full sm:w-auto"> Semak Jawapan </button> <button id="show-steps-btn" class="bg-gray-500 hover:bg-gray-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base w-full sm:w-auto"> Tunjuk Langkah </button> <button id="next-btn" class="bg-green-600 hover:bg-green-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base w-full sm:w-auto hidden"> Soalan Seterusnya </button>
+     </div><!-- Feedback -->
+     <div id="feedback" class="text-base sm:text-lg font-semibold hidden px-2"></div>
+    </div>
+   </div><!-- Progress Section -->
+   <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6">
+    <h3 class="text-lg sm:text-xl font-semibold text-gray-800 mb-4">📊 Kemajuan Anda</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+     <div class="text-center p-3 sm:p-4 bg-blue-50 rounded-lg">
+      <div class="text-xl sm:text-2xl font-bold text-blue-600" id="total-questions">
+       0
+      </div>
+      <div class="text-xs sm:text-sm text-gray-600">
+       Jumlah Soalan
+      </div>
+     </div>
+     <div class="text-center p-3 sm:p-4 bg-green-50 rounded-lg">
+      <div class="text-xl sm:text-2xl font-bold text-green-600" id="correct-answers">
+       0
+      </div>
+      <div class="text-xs sm:text-sm text-gray-600">
+       Jawapan Betul
+      </div>
+     </div>
+     <div class="text-center p-3 sm:p-4 bg-purple-50 rounded-lg">
+      <div class="text-xl sm:text-2xl font-bold text-purple-600" id="accuracy">
+       0%
+      </div>
+      <div class="text-xs sm:text-sm text-gray-600">
+       Ketepatan
+      </div>
+     </div>
+    </div>
+   </div>
+  </main>
+  <script>
+        // Configuration object
+        const defaultConfig = {
+            app_title: "Praktis Sistem Nombor Perenambelasan",
+            instruction_text: "Tukar nombor perenambelasan kepada nombor perpuluhan",
+            success_message: "Tahniah! Jawapan anda betul! 🎉"
+        };
 
-        <div class="content">
-            <section class="section theory">
-                <h2>🎯 Apakah Nombor Perlapanan?</h2>
-                <p><strong>Nombor Perlapanan (Octal)</strong> menggunakan asas 8 dengan digit 0, 1, 2, 3, 4, 5, 6, 7 sahaja.</p>
-                <p>Contoh: 25₁₀ = 31₈ (dibaca "tiga satu perlapanan")</p>
-            </section>
+        // Application state
+        let currentQuestion = null;
+        let questionCount = 0;
+        let correctCount = 0;
+        let currentRecordCount = 0;
 
-            <section class="section theory">
-                <h2>📝 Kaedah Bahagi dengan 8</h2>
-                <div class="steps">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <div>Bahagikan nombor perpuluhan dengan 8</div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div>Tulis hasil bahagi dan baki</div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div>Ulang langkah 1-2 dengan hasil bahagi sehingga hasil = 0</div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <div>Baca semua baki dari bawah ke atas</div>
-                    </div>
-                </div>
-            </section>
+        // Hex numbers for practice (various difficulty levels)
+        const hexNumbers = [
+            'A', 'B', 'C', 'D', 'E', 'F',
+            '1A', '2B', '3C', '4D', '5E', '6F',
+            '10', '20', '30', '40', '50', '60',
+            'AB', 'CD', 'EF', 'BC', 'DE', 'FA',
+            '100', '200', '1AB', '2CD', '3EF'
+        ];
 
-            <section class="section example">
-                <h2>💡 Contoh: Tukar 25₁₀ kepada perlapanan</h2>
-                <div class="calculation-steps">
-                    <div class="step-row">
-                        <span>25 ÷ 8 =</span>
-                        <span>Hasil: <span class="highlight">3</span>, Baki: <span class="highlight">1</span></span>
-                    </div>
-                    <div class="step-row">
-                        <span>3 ÷ 8 =</span>
-                        <span>Hasil: <span class="highlight">0</span>, Baki: <span class="highlight">3</span></span>
-                    </div>
-                    <div class="step-row">
-                        <span>Jawapan (baca dari bawah ke atas):</span>
-                        <span><strong>31₈</strong></span>
-                    </div>
-                </div>
-            </section>
+        // Data SDK handler
+        const dataHandler = {
+            onDataChanged(data) {
+                currentRecordCount = data.length;
+                updateProgress();
+            }
+        };
 
-            <section class="section interactive">
-                <h2>🧮 Kalkulator Interaktif</h2>
-                <div class="calculator">
-                    <div class="input-group">
-                        <label for="decimalInput">Masukkan nombor perpuluhan:</label>
-                        <input type="number" id="decimalInput" min="0" placeholder="Contoh: 25">
-                    </div>
-                    <button class="btn" onclick="convertToOctal()">🔄 Tukar ke Perlapanan</button>
-                    <button class="btn" onclick="clearCalculation()">🗑️ Padam</button>
-                    
-                    <div id="result" class="result" style="display: none;">
-                        <h3>📋 Hasil Penukaran:</h3>
-                        <div id="finalAnswer"></div>
-                        <div id="steps"></div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <script>
-        function convertToOctal() {
-            const decimal = parseInt(document.getElementById('decimalInput').value);
-            
-            if (isNaN(decimal) || decimal < 0) {
-                alert('Sila masukkan nombor yang sah (0 atau lebih besar)');
+        // Initialize SDKs
+        async function initializeApp() {
+            // Initialize Data SDK
+            const initResult = await window.dataSdk.init(dataHandler);
+            if (!initResult.isOk) {
+                console.error("Failed to initialize data SDK");
                 return;
             }
 
-            const resultDiv = document.getElementById('result');
-            const finalAnswerDiv = document.getElementById('finalAnswer');
-            const stepsDiv = document.getElementById('steps');
-
-            if (decimal === 0) {
-                finalAnswerDiv.innerHTML = `<h4>${decimal}₁₀ = 0₈</h4>`;
-                stepsDiv.innerHTML = '<p>Nombor 0 dalam mana-mana sistem nombor adalah 0.</p>';
-                resultDiv.style.display = 'block';
-                return;
-            }
-
-            let steps = [];
-            let remainders = [];
-            let current = decimal;
-            let stepNumber = 1;
-
-            // Perform conversion
-            while (current > 0) {
-                const quotient = Math.floor(current / 8);
-                const remainder = current % 8;
-                
-                steps.push({
-                    step: stepNumber,
-                    division: `${current} ÷ 8`,
-                    quotient: quotient,
-                    remainder: remainder
+            // Initialize Element SDK
+            if (window.elementSdk) {
+                window.elementSdk.init({
+                    defaultConfig,
+                    onConfigChange: async (config) => {
+                        document.getElementById('app-title').textContent = config.app_title || defaultConfig.app_title;
+                        document.getElementById('instruction-text').textContent = config.instruction_text || defaultConfig.instruction_text;
+                    },
+                    mapToCapabilities: (config) => ({
+                        recolorables: [
+                            {
+                                get: () => config.primary_color || "#4f46e5",
+                                set: (value) => {
+                                    config.primary_color = value;
+                                    window.elementSdk.setConfig({ primary_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.background_color || "#f8fafc",
+                                set: (value) => {
+                                    config.background_color = value;
+                                    window.elementSdk.setConfig({ background_color: value });
+                                }
+                            }
+                        ],
+                        borderables: [],
+                        fontEditable: {
+                            get: () => config.font_family || "Inter",
+                            set: (value) => {
+                                config.font_family = value;
+                                window.elementSdk.setConfig({ font_family: value });
+                            }
+                        },
+                        fontSizeable: {
+                            get: () => config.font_size || 16,
+                            set: (value) => {
+                                config.font_size = value;
+                                window.elementSdk.setConfig({ font_size: value });
+                            }
+                        }
+                    }),
+                    mapToEditPanelValues: (config) => new Map([
+                        ["app_title", config.app_title || defaultConfig.app_title],
+                        ["instruction_text", config.instruction_text || defaultConfig.instruction_text],
+                        ["success_message", config.success_message || defaultConfig.success_message]
+                    ])
                 });
-                
-                remainders.push(remainder);
-                current = quotient;
-                stepNumber++;
             }
 
-            // Build result
-            const octalResult = remainders.reverse().join('');
+            generateNewQuestion();
+            setupEventListeners();
+        }
+
+        function generateNewQuestion() {
+            const randomHex = hexNumbers[Math.floor(Math.random() * hexNumbers.length)];
+            currentQuestion = {
+                hex: randomHex,
+                decimal: parseInt(randomHex, 16)
+            };
+
+            displayHexNumber(randomHex);
+            resetUI();
+        }
+
+        function displayHexNumber(hex) {
+            const hexDisplay = document.getElementById('hex-display');
+            hexDisplay.innerHTML = '';
             
-            finalAnswerDiv.innerHTML = `<h4>${decimal}₁₀ = ${octalResult}₈</h4>`;
-            
-            let stepsHTML = '<div class="calculation-steps">';
-            steps.forEach((step, index) => {
-                stepsHTML += `
-                    <div class="step-row">
-                        <span>${step.division} =</span>
-                        <span>Hasil: <span class="highlight">${step.quotient}</span>, Baki: <span class="highlight">${step.remainder}</span></span>
+            for (let i = 0; i < hex.length; i++) {
+                const digit = document.createElement('span');
+                digit.textContent = hex[i];
+                digit.className = 'hex-digit inline-block mx-1';
+                hexDisplay.appendChild(digit);
+            }
+        }
+
+        function resetUI() {
+            document.getElementById('answer-input').value = '';
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('calculation-steps').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            document.getElementById('check-btn').classList.remove('hidden');
+            document.getElementById('answer-input').disabled = false;
+        }
+
+        function showCalculationSteps(hex) {
+            const stepsContent = document.getElementById('steps-content');
+            stepsContent.innerHTML = '';
+
+            let calculation = '';
+            let total = 0;
+
+            for (let i = 0; i < hex.length; i++) {
+                const digit = hex[i];
+                const position = hex.length - 1 - i;
+                const digitValue = parseInt(digit, 16);
+                const positionValue = Math.pow(16, position);
+                const stepValue = digitValue * positionValue;
+
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'calculation-step mb-2 p-2 sm:p-3 bg-white rounded border-l-4 border-indigo-400';
+                stepDiv.innerHTML = `
+                    <div class="text-sm sm:text-base">
+                        <span class="font-mono text-base sm:text-lg">${digit}</span> × 16<sup class="text-xs sm:text-sm">${position}</sup> = 
+                        <span class="font-mono">${digitValue}</span> × <span class="font-mono">${positionValue}</span> = 
+                        <span class="font-bold text-indigo-600">${stepValue}</span>
                     </div>
                 `;
+                stepsContent.appendChild(stepDiv);
+
+                total += stepValue;
+                if (i < hex.length - 1) {
+                    calculation += `${stepValue} + `;
+                } else {
+                    calculation += `${stepValue} = ${total}`;
+                }
+            }
+
+            const totalDiv = document.createElement('div');
+            totalDiv.className = 'calculation-step mt-3 sm:mt-4 p-3 bg-indigo-50 rounded border-2 border-indigo-200';
+            totalDiv.innerHTML = `
+                <div class="font-semibold text-indigo-800 text-sm sm:text-base">Jumlah:</div>
+                <div class="font-mono text-sm sm:text-base lg:text-lg break-all">${calculation}</div>
+            `;
+            stepsContent.appendChild(totalDiv);
+
+            document.getElementById('calculation-steps').classList.remove('hidden');
+        }
+
+        async function checkAnswer() {
+            const userAnswer = parseInt(document.getElementById('answer-input').value);
+            const feedback = document.getElementById('feedback');
+            const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
+
+            if (isNaN(userAnswer)) {
+                feedback.textContent = 'Sila masukkan nombor yang sah.';
+                feedback.className = 'text-lg font-semibold text-red-600';
+                feedback.classList.remove('hidden');
+                return;
+            }
+
+            const isCorrect = userAnswer === currentQuestion.decimal;
+            
+            // Check data limit before creating new record
+            if (currentRecordCount >= 999) {
+                feedback.textContent = 'Had maksimum 999 soalan telah dicapai. Sila mula semula latihan.';
+                feedback.className = 'text-lg font-semibold text-orange-600';
+                feedback.classList.remove('hidden');
+                return;
+            }
+
+            // Save attempt to data
+            const result = await window.dataSdk.create({
+                question_id: `q_${Date.now()}`,
+                hex_number: currentQuestion.hex,
+                user_answer: userAnswer.toString(),
+                correct_answer: currentQuestion.decimal.toString(),
+                is_correct: isCorrect,
+                timestamp: new Date().toISOString()
+            });
+
+            if (!result.isOk) {
+                feedback.textContent = 'Ralat menyimpan data. Sila cuba lagi.';
+                feedback.className = 'text-lg font-semibold text-red-600';
+                feedback.classList.remove('hidden');
+                return;
+            }
+
+            if (isCorrect) {
+                correctCount++;
+                feedback.textContent = config.success_message || defaultConfig.success_message;
+                feedback.className = 'text-lg font-semibold text-green-600 success-animation';
+            } else {
+                feedback.textContent = `Tidak betul. Jawapan yang betul ialah ${currentQuestion.decimal}.`;
+                feedback.className = 'text-lg font-semibold text-red-600';
+            }
+
+            questionCount++;
+            feedback.classList.remove('hidden');
+            document.getElementById('check-btn').classList.add('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+            document.getElementById('answer-input').disabled = true;
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            document.getElementById('total-questions').textContent = questionCount;
+            document.getElementById('correct-answers').textContent = correctCount;
+            const accuracy = questionCount > 0 ? Math.round((correctCount / questionCount) * 100) : 0;
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+            document.getElementById('question-counter').textContent = questionCount + 1;
+        }
+
+        function setupEventListeners() {
+            document.getElementById('check-btn').addEventListener('click', checkAnswer);
+            
+            document.getElementById('show-steps-btn').addEventListener('click', () => {
+                showCalculationSteps(currentQuestion.hex);
             });
             
-            stepsHTML += `
-                <div class="step-row">
-                    <span>Jawapan (baca baki dari bawah ke atas):</span>
-                    <span><strong>${octalResult}₈</strong></span>
-                </div>
-            </div>`;
+            document.getElementById('next-btn').addEventListener('click', generateNewQuestion);
             
-            stepsDiv.innerHTML = stepsHTML;
-            resultDiv.style.display = 'block';
+            document.getElementById('answer-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const checkBtn = document.getElementById('check-btn');
+                    const nextBtn = document.getElementById('next-btn');
+                    
+                    if (!checkBtn.classList.contains('hidden')) {
+                        checkAnswer();
+                    } else if (!nextBtn.classList.contains('hidden')) {
+                        generateNewQuestion();
+                    }
+                }
+            });
         }
 
-        function clearCalculation() {
-            document.getElementById('decimalInput').value = '';
-            document.getElementById('result').style.display = 'none';
-        }
-
-        // Allow Enter key to trigger conversion
-        document.getElementById('decimalInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                convertToOctal();
-            }
-        });
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'994eedc1f7206b5d',t:'MTc2MTUzMzg3NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9950b0eeb656a559',t:'MTc2MTU1MjM1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
