@@ -269,6 +269,146 @@
         .medium { background: #feebc8; color: #c05621; }
         .hard { background: #fed7d7; color: #c53030; }
 
+        /* Introduction Screen Styles */
+        .intro-screen {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .intro-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .intro-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .intro-screen h2 {
+            color: #4facfe;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .intro-description {
+            font-size: 1.1em;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .error-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .error-type {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .error-type:hover {
+            transform: translateY(-5px);
+        }
+
+        .error-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .error-type h4 {
+            color: #333;
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+
+        .error-type p {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .intro-features {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .intro-features h4 {
+            color: #4facfe;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .intro-features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .intro-features li {
+            padding: 8px 0;
+            font-size: 1em;
+            color: #555;
+        }
+
+        .navigation-tips {
+            background: linear-gradient(135deg, #fff3e0 0%, #fce4ec 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .navigation-tips h4 {
+            color: #ff6b35;
+            margin-bottom: 20px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .tip {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 10px;
+        }
+
+        .tip-key {
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tip-action {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .btn-start {
+            font-size: 1.2em;
+            padding: 15px 30px;
+            margin-top: 30px;
+            border-radius: 30px;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 10px;
@@ -392,6 +532,45 @@
                 min-height: 60px;
                 font-size: 0.65em;
             }
+
+            /* Mobile intro styles */
+            .intro-icon {
+                font-size: 3em;
+            }
+
+            .intro-screen h2 {
+                font-size: 1.8em;
+            }
+
+            .intro-description {
+                font-size: 1em;
+            }
+
+            .error-types {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .error-type {
+                padding: 20px;
+            }
+
+            .intro-features, .navigation-tips {
+                padding: 20px;
+                margin: 20px 0;
+            }
+
+            .tips-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .btn-start {
+                font-size: 1.1em;
+                padding: 12px 25px;
+                width: 100%;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
@@ -403,68 +582,134 @@
         </header>
 
         <main class="main-content">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
+            <!-- Introduction Screen -->
+            <div class="intro-screen" id="introScreen">
+                <div class="intro-content">
+                    <div class="intro-icon">🎯</div>
+                    <h2>Selamat Datang ke Flashcard Algoritma!</h2>
+                    <p class="intro-description">
+                        Flashcard ini direka khas untuk membantu anda menguasai kemahiran mengesan dan membaiki ralat dalam algoritma. 
+                        Anda akan belajar mengenai 3 jenis ralat utama:
+                    </p>
+                    
+                    <div class="error-types">
+                        <div class="error-type">
+                            <div class="error-icon syntax">🔧</div>
+                            <h4>Ralat Sintaks</h4>
+                            <p>Ralat dalam struktur penulisan kod atau carta alir</p>
+                        </div>
+                        <div class="error-type">
+                            <div class="error-icon logic">🧠</div>
+                            <h4>Ralat Logik</h4>
+                            <p>Ralat dalam aliran pemikiran atau keputusan</p>
+                        </div>
+                        <div class="error-type">
+                            <div class="error-icon runtime">⚡</div>
+                            <h4>Ralat Masa Larian</h4>
+                            <p>Ralat yang berlaku semasa program berjalan</p>
+                        </div>
+                    </div>
+                    
+                    <div class="intro-features">
+                        <h4>Ciri-ciri Flashcard:</h4>
+                        <ul>
+                            <li>✅ 6 kad latihan dengan contoh sebenar</li>
+                            <li>✅ Pseudokod dan carta alir</li>
+                            <li>✅ Penjelasan terperinci untuk setiap ralat</li>
+                            <li>✅ Penyelesaian yang diperbaiki</li>
+                            <li>✅ Navigasi mudah dengan papan kekunci atau sentuhan</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="navigation-tips">
+                        <h4>Cara Navigasi:</h4>
+                        <div class="tips-grid">
+                            <div class="tip">
+                                <span class="tip-key">Spacebar / Enter</span>
+                                <span class="tip-action">Tunjuk jawapan</span>
+                            </div>
+                            <div class="tip">
+                                <span class="tip-key">← →</span>
+                                <span class="tip-action">Tukar kad</span>
+                            </div>
+                            <div class="tip">
+                                <span class="tip-key">Leret / Ketuk 2x</span>
+                                <span class="tip-action">Navigasi mudah alih</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-start" onclick="startFlashcards()">
+                        🚀 Mula Belajar Sekarang
+                    </button>
+                </div>
             </div>
 
-            <div class="card" id="flashcard">
-                <div class="difficulty-badge easy" id="difficultyBadge">Mudah</div>
-                
-                <div class="card-content question-side" id="questionSide">
-                    <div class="question-type" id="questionType">Pseudokod - Ralat Logik</div>
-                    <h3 id="questionTitle">Kenal pasti ralat dalam pseudokod berikut:</h3>
-                    <div class="code-block" id="questionCode">
-                        MULA<br>
-                        BACA umur<br>
-                        JIKA umur > 18 MAKA<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;PAPAR "Dewasa"<br>
-                        JIKA umur < 18 MAKA<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;PAPAR "Kanak-kanak"<br>
-                        TAMAT
-                    </div>
-                    <p><strong>Soalan:</strong> <span id="questionText">Apakah yang akan berlaku jika umur = 18?</span></p>
+            <!-- Main Flashcard Content -->
+            <div class="flashcard-content" id="flashcardContent" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
                 </div>
 
-                <div class="card-content answer-side" id="answerSide">
-                    <div class="question-type">Jawapan & Penjelasan</div>
-                    <h3>🎯 Ralat yang dikesan:</h3>
-                    <div id="answerContent">
-                        <p><strong>Masalah:</strong> Tiada pengendalian untuk umur = 18 (missing condition)</p>
-                        
-                        <h4>Pseudokod yang diperbaiki:</h4>
-                        <div class="code-block">
+                <div class="card" id="flashcard">
+                    <div class="difficulty-badge easy" id="difficultyBadge">Mudah</div>
+                    
+                    <div class="card-content question-side" id="questionSide">
+                        <div class="question-type" id="questionType">Pseudokod - Ralat Logik</div>
+                        <h3 id="questionTitle">Kenal pasti ralat dalam pseudokod berikut:</h3>
+                        <div class="code-block" id="questionCode">
                             MULA<br>
                             BACA umur<br>
-                            JIKA umur <span class="correct-highlight">>=</span> 18 MAKA<br>
+                            JIKA umur > 18 MAKA<br>
                             &nbsp;&nbsp;&nbsp;&nbsp;PAPAR "Dewasa"<br>
-                            <span class="correct-highlight">SELAIN ITU</span><br>
+                            JIKA umur < 18 MAKA<br>
                             &nbsp;&nbsp;&nbsp;&nbsp;PAPAR "Kanak-kanak"<br>
                             TAMAT
                         </div>
-                        
-                        <p><strong>Penjelasan:</strong> Gunakan >= untuk memasukkan umur 18, atau gunakan struktur JIKA-SELAIN ITU untuk memastikan semua kes ditangani.</p>
+                        <p><strong>Soalan:</strong> <span id="questionText">Apakah yang akan berlaku jika umur = 18?</span></p>
+                    </div>
+
+                    <div class="card-content answer-side" id="answerSide">
+                        <div class="question-type">Jawapan & Penjelasan</div>
+                        <h3>🎯 Ralat yang dikesan:</h3>
+                        <div id="answerContent">
+                            <p><strong>Masalah:</strong> Tiada pengendalian untuk umur = 18 (missing condition)</p>
+                            
+                            <h4>Pseudokod yang diperbaiki:</h4>
+                            <div class="code-block">
+                                MULA<br>
+                                BACA umur<br>
+                                JIKA umur <span class="correct-highlight">>=</span> 18 MAKA<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;PAPAR "Dewasa"<br>
+                                <span class="correct-highlight">SELAIN ITU</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;PAPAR "Kanak-kanak"<br>
+                                TAMAT
+                            </div>
+                            
+                            <p><strong>Penjelasan:</strong> Gunakan >= untuk memasukkan umur 18, atau gunakan struktur JIKA-SELAIN ITU untuk memastikan semua kes ditangani.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="controls">
-                <button class="btn btn-secondary" id="prevBtn" onclick="previousCard()">⬅️ Sebelum</button>
-                <button class="btn btn-primary" id="flipBtn" onclick="flipCard()">🔄 Tunjuk Jawapan</button>
-                <button class="btn btn-secondary" id="nextBtn" onclick="nextCard()">Seterusnya ➡️</button>
-            </div>
+                <div class="controls">
+                    <button class="btn btn-secondary" id="prevBtn" onclick="previousCard()">⬅️ Sebelum</button>
+                    <button class="btn btn-primary" id="flipBtn" onclick="flipCard()">🔄 Tunjuk Jawapan</button>
+                    <button class="btn btn-secondary" id="nextBtn" onclick="nextCard()">Seterusnya ➡️</button>
+                </div>
 
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-number" id="currentCard">1</div>
-                    <div class="stat-label">Kad Semasa</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="totalCards">6</div>
-                    <div class="stat-label">Jumlah Kad</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="completedCards">0</div>
-                    <div class="stat-label">Selesai</div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="currentCard">1</div>
+                        <div class="stat-label">Kad Semasa</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalCards">6</div>
+                        <div class="stat-label">Jumlah Kad</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="completedCards">0</div>
+                        <div class="stat-label">Selesai</div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -858,8 +1103,14 @@ TAMAT`,
             lastTap = currentTime;
         });
 
+        // Start flashcards function
+        function startFlashcards() {
+            document.getElementById('introScreen').style.display = 'none';
+            document.getElementById('flashcardContent').style.display = 'block';
+        }
+
         // Initialize
         updateCard();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99511dcc31a8cc5f',t:'MTc2MTU1NjgxNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99517fb43337a319',t:'MTc2MTU2MDgyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
