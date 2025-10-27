@@ -460,34 +460,49 @@
         }
 
         async function checkAnswer() {
+            console.log('checkAnswer function called');
+            
+            const checkBtn = document.getElementById('check-btn');
+            const answerInput = document.getElementById('answer-input');
+            const feedback = document.getElementById('feedback');
+            
+            if (!checkBtn || !answerInput || !feedback) {
+                console.error('Required elements not found');
+                return;
+            }
+
+            const userAnswerText = answerInput.value.trim();
+            console.log('User input:', userAnswerText);
+            
+            if (userAnswerText === '') {
+                feedback.textContent = 'Sila masukkan jawapan anda.';
+                feedback.className = 'text-base sm:text-lg font-semibold text-red-600';
+                feedback.classList.remove('hidden');
+                return;
+            }
+
+            const userAnswer = parseInt(userAnswerText);
+            
+            if (isNaN(userAnswer)) {
+                feedback.textContent = 'Sila masukkan nombor yang sah.';
+                feedback.className = 'text-base sm:text-lg font-semibold text-red-600';
+                feedback.classList.remove('hidden');
+                return;
+            }
+
+            if (!currentQuestion) {
+                console.error('No current question');
+                return;
+            }
+
+            console.log('Checking:', userAnswer, 'vs', currentQuestion.decimal);
+            
+            const isCorrect = userAnswer === currentQuestion.decimal;
+            
             try {
-                const checkBtn = document.getElementById('check-btn');
-                const userAnswer = parseInt(document.getElementById('answer-input').value);
-                const feedback = document.getElementById('feedback');
-                const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
-
-                // Show loading state
-                checkBtn.disabled = true;
-                checkBtn.textContent = 'Menyemak...';
-                checkBtn.classList.add('opacity-75');
-
-                if (isNaN(userAnswer)) {
-                    feedback.textContent = 'Sila masukkan nombor yang sah.';
-                    feedback.className = 'text-base sm:text-lg font-semibold text-red-600';
-                    feedback.classList.remove('hidden');
-                    
-                    // Reset button
-                    checkBtn.disabled = false;
-                    checkBtn.textContent = 'Semak Jawapan';
-                    checkBtn.classList.remove('opacity-75');
-                    return;
-                }
-
-                const isCorrect = userAnswer === currentQuestion.decimal;
-                
                 // Check data limit before creating new record
                 if (currentRecordCount >= 999) {
-                    feedback.textContent = 'Had maksimum 999 soalan telah dicapai. Sila mula semula latihan.';
+                    feedback.textContent = 'Had maksimum 999 soalan telah dicapai.';
                     feedback.className = 'text-base sm:text-lg font-semibold text-orange-600';
                     feedback.classList.remove('hidden');
                     return;
@@ -504,15 +519,13 @@
                 });
 
                 if (!result.isOk) {
-                    feedback.textContent = 'Ralat menyimpan data. Sila cuba lagi.';
-                    feedback.className = 'text-base sm:text-lg font-semibold text-red-600';
-                    feedback.classList.remove('hidden');
-                    return;
+                    console.error('Failed to save data:', result.error);
                 }
 
+                // Show feedback regardless of save result
                 if (isCorrect) {
                     correctCount++;
-                    feedback.textContent = config.success_message || defaultConfig.success_message;
+                    feedback.textContent = 'Tahniah! Jawapan anda betul! 🎉';
                     feedback.className = 'text-base sm:text-lg font-semibold text-green-600 success-animation';
                 } else {
                     feedback.textContent = `Tidak betul. Jawapan yang betul ialah ${currentQuestion.decimal}.`;
@@ -521,14 +534,14 @@
 
                 questionCount++;
                 feedback.classList.remove('hidden');
-                document.getElementById('check-btn').classList.add('hidden');
+                checkBtn.classList.add('hidden');
                 document.getElementById('next-btn').classList.remove('hidden');
-                document.getElementById('answer-input').disabled = true;
+                answerInput.disabled = true;
 
                 updateProgress();
+                
             } catch (error) {
-                console.error("Error checking answer:", error);
-                const feedback = document.getElementById('feedback');
+                console.error("Error in checkAnswer:", error);
                 feedback.textContent = 'Ralat semasa menyemak jawapan. Sila cuba lagi.';
                 feedback.className = 'text-base sm:text-lg font-semibold text-red-600';
                 feedback.classList.remove('hidden');
@@ -544,53 +557,55 @@
         }
 
         function setupEventListeners() {
-            // Add visual feedback for button clicks
-            document.getElementById('check-btn').addEventListener('click', (e) => {
-                e.preventDefault();
-                e.target.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    e.target.style.transform = 'scale(1)';
-                }, 100);
-                checkAnswer();
-            });
+            // Check Answer Button
+            const checkBtn = document.getElementById('check-btn');
+            if (checkBtn) {
+                checkBtn.addEventListener('click', function() {
+                    console.log('Check button clicked');
+                    checkAnswer();
+                });
+            }
             
-            document.getElementById('show-steps-btn').addEventListener('click', (e) => {
-                e.preventDefault();
-                e.target.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    e.target.style.transform = 'scale(1)';
-                }, 100);
-                
-                if (currentQuestion) {
-                    showCalculationSteps(currentQuestion.hex);
-                }
-            });
-            
-            document.getElementById('next-btn').addEventListener('click', (e) => {
-                e.preventDefault();
-                e.target.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    e.target.style.transform = 'scale(1)';
-                }, 100);
-                generateNewQuestion();
-            });
-            
-            document.getElementById('answer-input').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    const checkBtn = document.getElementById('check-btn');
-                    const nextBtn = document.getElementById('next-btn');
-                    
-                    if (!checkBtn.classList.contains('hidden')) {
-                        checkAnswer();
-                    } else if (!nextBtn.classList.contains('hidden')) {
-                        generateNewQuestion();
+            // Show Steps Button
+            const showStepsBtn = document.getElementById('show-steps-btn');
+            if (showStepsBtn) {
+                showStepsBtn.addEventListener('click', function() {
+                    console.log('Show steps button clicked');
+                    if (currentQuestion) {
+                        showCalculationSteps(currentQuestion.hex);
                     }
-                }
-            });
+                });
+            }
+            
+            // Next Question Button
+            const nextBtn = document.getElementById('next-btn');
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function() {
+                    console.log('Next button clicked');
+                    generateNewQuestion();
+                });
+            }
+            
+            // Enter key support
+            const answerInput = document.getElementById('answer-input');
+            if (answerInput) {
+                answerInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        const checkBtn = document.getElementById('check-btn');
+                        const nextBtn = document.getElementById('next-btn');
+                        
+                        if (checkBtn && !checkBtn.classList.contains('hidden')) {
+                            checkAnswer();
+                        } else if (nextBtn && !nextBtn.classList.contains('hidden')) {
+                            generateNewQuestion();
+                        }
+                    }
+                });
+            }
         }
 
         // Initialize app when page loads
         document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9950d79441d9cf0c',t:'MTc2MTU1MzkzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9950e61c76c4ad7a',t:'MTc2MTU1NDUzNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
