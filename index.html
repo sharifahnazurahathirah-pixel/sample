@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Latihan Sistem Nombor Perenambelasan</title>
+  <title>Praktis Sistem Nombor Perenambelasan</title>
   <script src="/_sdk/data_sdk.js"></script>
   <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -13,6 +13,9 @@
         }
         .hex-digit {
             transition: all 0.3s ease;
+            display: inline-block;
+            min-width: 1.5rem;
+            text-align: center;
         }
         .hex-digit:hover {
             transform: scale(1.1);
@@ -31,6 +34,12 @@
             0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
             40% { transform: translateY(-10px); }
             60% { transform: translateY(-5px); }
+        }
+        #hex-display {
+            min-height: 4rem;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
         }
     </style>
   <style>@view-transition { navigation: auto; }</style>
@@ -188,7 +197,8 @@
      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4">Soalan <span id="question-counter">1</span></h2>
      <p class="text-sm sm:text-base lg:text-lg text-gray-600 mb-4 px-2">Tukarkan nombor perenambelasan ini kepada perpuluhan:</p><!-- Hex Number Display -->
      <div class="flex justify-center items-center mb-4 sm:mb-6">
-      <div id="hex-display" class="text-2xl sm:text-3xl lg:text-4xl font-bold text-indigo-600 bg-indigo-50 px-4 sm:px-6 py-3 sm:py-4 rounded-lg border-2 border-indigo-200"><!-- Hex digits will be inserted here -->
+      <div id="hex-display" class="text-2xl sm:text-3xl lg:text-4xl font-bold text-indigo-600 bg-indigo-50 px-4 sm:px-6 py-3 sm:py-4 rounded-lg border-2 border-indigo-200">
+       A
       </div><span class="text-lg sm:text-xl lg:text-2xl text-gray-500 ml-2">₁₆</span>
      </div><!-- Step-by-step calculation -->
      <div id="calculation-steps" class="bg-gray-50 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 hidden">
@@ -265,86 +275,110 @@
 
         // Initialize SDKs
         async function initializeApp() {
-            // Initialize Data SDK
-            const initResult = await window.dataSdk.init(dataHandler);
-            if (!initResult.isOk) {
-                console.error("Failed to initialize data SDK");
-                return;
-            }
+            try {
+                // Initialize Data SDK
+                const initResult = await window.dataSdk.init(dataHandler);
+                if (!initResult.isOk) {
+                    console.error("Failed to initialize data SDK");
+                    return;
+                }
 
-            // Initialize Element SDK
-            if (window.elementSdk) {
-                window.elementSdk.init({
-                    defaultConfig,
-                    onConfigChange: async (config) => {
-                        document.getElementById('app-title').textContent = config.app_title || defaultConfig.app_title;
-                        document.getElementById('instruction-text').textContent = config.instruction_text || defaultConfig.instruction_text;
-                    },
-                    mapToCapabilities: (config) => ({
-                        recolorables: [
-                            {
-                                get: () => config.primary_color || "#4f46e5",
+                // Initialize Element SDK
+                if (window.elementSdk) {
+                    window.elementSdk.init({
+                        defaultConfig,
+                        onConfigChange: async (config) => {
+                            document.getElementById('app-title').textContent = config.app_title || defaultConfig.app_title;
+                            document.getElementById('instruction-text').textContent = config.instruction_text || defaultConfig.instruction_text;
+                        },
+                        mapToCapabilities: (config) => ({
+                            recolorables: [
+                                {
+                                    get: () => config.primary_color || "#4f46e5",
+                                    set: (value) => {
+                                        config.primary_color = value;
+                                        window.elementSdk.setConfig({ primary_color: value });
+                                    }
+                                },
+                                {
+                                    get: () => config.background_color || "#f8fafc",
+                                    set: (value) => {
+                                        config.background_color = value;
+                                        window.elementSdk.setConfig({ background_color: value });
+                                    }
+                                }
+                            ],
+                            borderables: [],
+                            fontEditable: {
+                                get: () => config.font_family || "Inter",
                                 set: (value) => {
-                                    config.primary_color = value;
-                                    window.elementSdk.setConfig({ primary_color: value });
+                                    config.font_family = value;
+                                    window.elementSdk.setConfig({ font_family: value });
                                 }
                             },
-                            {
-                                get: () => config.background_color || "#f8fafc",
+                            fontSizeable: {
+                                get: () => config.font_size || 16,
                                 set: (value) => {
-                                    config.background_color = value;
-                                    window.elementSdk.setConfig({ background_color: value });
+                                    config.font_size = value;
+                                    window.elementSdk.setConfig({ font_size: value });
                                 }
                             }
-                        ],
-                        borderables: [],
-                        fontEditable: {
-                            get: () => config.font_family || "Inter",
-                            set: (value) => {
-                                config.font_family = value;
-                                window.elementSdk.setConfig({ font_family: value });
-                            }
-                        },
-                        fontSizeable: {
-                            get: () => config.font_size || 16,
-                            set: (value) => {
-                                config.font_size = value;
-                                window.elementSdk.setConfig({ font_size: value });
-                            }
-                        }
-                    }),
-                    mapToEditPanelValues: (config) => new Map([
-                        ["app_title", config.app_title || defaultConfig.app_title],
-                        ["instruction_text", config.instruction_text || defaultConfig.instruction_text],
-                        ["success_message", config.success_message || defaultConfig.success_message]
-                    ])
-                });
-            }
+                        }),
+                        mapToEditPanelValues: (config) => new Map([
+                            ["app_title", config.app_title || defaultConfig.app_title],
+                            ["instruction_text", config.instruction_text || defaultConfig.instruction_text],
+                            ["success_message", config.success_message || defaultConfig.success_message]
+                        ])
+                    });
+                }
 
-            generateNewQuestion();
-            setupEventListeners();
+                // Generate first question and setup
+                generateNewQuestion();
+                setupEventListeners();
+            } catch (error) {
+                console.error("Error initializing app:", error);
+            }
         }
 
         function generateNewQuestion() {
-            const randomHex = hexNumbers[Math.floor(Math.random() * hexNumbers.length)];
-            currentQuestion = {
-                hex: randomHex,
-                decimal: parseInt(randomHex, 16)
-            };
+            try {
+                const randomHex = hexNumbers[Math.floor(Math.random() * hexNumbers.length)];
+                currentQuestion = {
+                    hex: randomHex,
+                    decimal: parseInt(randomHex, 16)
+                };
 
-            displayHexNumber(randomHex);
-            resetUI();
+                displayHexNumber(randomHex);
+                resetUI();
+            } catch (error) {
+                console.error("Error generating question:", error);
+            }
         }
 
         function displayHexNumber(hex) {
-            const hexDisplay = document.getElementById('hex-display');
-            hexDisplay.innerHTML = '';
-            
-            for (let i = 0; i < hex.length; i++) {
-                const digit = document.createElement('span');
-                digit.textContent = hex[i];
-                digit.className = 'hex-digit inline-block mx-1';
-                hexDisplay.appendChild(digit);
+            try {
+                const hexDisplay = document.getElementById('hex-display');
+                if (!hexDisplay) {
+                    console.error('Hex display element not found');
+                    return;
+                }
+                
+                hexDisplay.innerHTML = '';
+                
+                // Create each digit with proper styling
+                for (let i = 0; i < hex.length; i++) {
+                    const digit = document.createElement('span');
+                    digit.textContent = hex[i];
+                    digit.className = 'hex-digit';
+                    hexDisplay.appendChild(digit);
+                }
+            } catch (error) {
+                console.error("Error displaying hex number:", error);
+                // Fallback - show the hex number directly
+                const hexDisplay = document.getElementById('hex-display');
+                if (hexDisplay) {
+                    hexDisplay.textContent = hex;
+                }
             }
         }
 
@@ -402,60 +436,68 @@
         }
 
         async function checkAnswer() {
-            const userAnswer = parseInt(document.getElementById('answer-input').value);
-            const feedback = document.getElementById('feedback');
-            const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
+            try {
+                const userAnswer = parseInt(document.getElementById('answer-input').value);
+                const feedback = document.getElementById('feedback');
+                const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
 
-            if (isNaN(userAnswer)) {
-                feedback.textContent = 'Sila masukkan nombor yang sah.';
-                feedback.className = 'text-lg font-semibold text-red-600';
+                if (isNaN(userAnswer)) {
+                    feedback.textContent = 'Sila masukkan nombor yang sah.';
+                    feedback.className = 'text-base sm:text-lg font-semibold text-red-600';
+                    feedback.classList.remove('hidden');
+                    return;
+                }
+
+                const isCorrect = userAnswer === currentQuestion.decimal;
+                
+                // Check data limit before creating new record
+                if (currentRecordCount >= 999) {
+                    feedback.textContent = 'Had maksimum 999 soalan telah dicapai. Sila mula semula latihan.';
+                    feedback.className = 'text-base sm:text-lg font-semibold text-orange-600';
+                    feedback.classList.remove('hidden');
+                    return;
+                }
+
+                // Save attempt to data
+                const result = await window.dataSdk.create({
+                    question_id: `q_${Date.now()}`,
+                    hex_number: currentQuestion.hex,
+                    user_answer: userAnswer.toString(),
+                    correct_answer: currentQuestion.decimal.toString(),
+                    is_correct: isCorrect,
+                    timestamp: new Date().toISOString()
+                });
+
+                if (!result.isOk) {
+                    feedback.textContent = 'Ralat menyimpan data. Sila cuba lagi.';
+                    feedback.className = 'text-base sm:text-lg font-semibold text-red-600';
+                    feedback.classList.remove('hidden');
+                    return;
+                }
+
+                if (isCorrect) {
+                    correctCount++;
+                    feedback.textContent = config.success_message || defaultConfig.success_message;
+                    feedback.className = 'text-base sm:text-lg font-semibold text-green-600 success-animation';
+                } else {
+                    feedback.textContent = `Tidak betul. Jawapan yang betul ialah ${currentQuestion.decimal}.`;
+                    feedback.className = 'text-base sm:text-lg font-semibold text-red-600';
+                }
+
+                questionCount++;
                 feedback.classList.remove('hidden');
-                return;
-            }
+                document.getElementById('check-btn').classList.add('hidden');
+                document.getElementById('next-btn').classList.remove('hidden');
+                document.getElementById('answer-input').disabled = true;
 
-            const isCorrect = userAnswer === currentQuestion.decimal;
-            
-            // Check data limit before creating new record
-            if (currentRecordCount >= 999) {
-                feedback.textContent = 'Had maksimum 999 soalan telah dicapai. Sila mula semula latihan.';
-                feedback.className = 'text-lg font-semibold text-orange-600';
+                updateProgress();
+            } catch (error) {
+                console.error("Error checking answer:", error);
+                const feedback = document.getElementById('feedback');
+                feedback.textContent = 'Ralat semasa menyemak jawapan. Sila cuba lagi.';
+                feedback.className = 'text-base sm:text-lg font-semibold text-red-600';
                 feedback.classList.remove('hidden');
-                return;
             }
-
-            // Save attempt to data
-            const result = await window.dataSdk.create({
-                question_id: `q_${Date.now()}`,
-                hex_number: currentQuestion.hex,
-                user_answer: userAnswer.toString(),
-                correct_answer: currentQuestion.decimal.toString(),
-                is_correct: isCorrect,
-                timestamp: new Date().toISOString()
-            });
-
-            if (!result.isOk) {
-                feedback.textContent = 'Ralat menyimpan data. Sila cuba lagi.';
-                feedback.className = 'text-lg font-semibold text-red-600';
-                feedback.classList.remove('hidden');
-                return;
-            }
-
-            if (isCorrect) {
-                correctCount++;
-                feedback.textContent = config.success_message || defaultConfig.success_message;
-                feedback.className = 'text-lg font-semibold text-green-600 success-animation';
-            } else {
-                feedback.textContent = `Tidak betul. Jawapan yang betul ialah ${currentQuestion.decimal}.`;
-                feedback.className = 'text-lg font-semibold text-red-600';
-            }
-
-            questionCount++;
-            feedback.classList.remove('hidden');
-            document.getElementById('check-btn').classList.add('hidden');
-            document.getElementById('next-btn').classList.remove('hidden');
-            document.getElementById('answer-input').disabled = true;
-
-            updateProgress();
         }
 
         function updateProgress() {
@@ -470,7 +512,9 @@
             document.getElementById('check-btn').addEventListener('click', checkAnswer);
             
             document.getElementById('show-steps-btn').addEventListener('click', () => {
-                showCalculationSteps(currentQuestion.hex);
+                if (currentQuestion) {
+                    showCalculationSteps(currentQuestion.hex);
+                }
             });
             
             document.getElementById('next-btn').addEventListener('click', generateNewQuestion);
@@ -492,5 +536,5 @@
         // Initialize app when page loads
         document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9950b0eeb656a559',t:'MTc2MTU1MjM1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9950d2358685cf0c',t:'MTc2MTU1MzcxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
