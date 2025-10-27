@@ -46,16 +46,16 @@
       <h1 id="main-title" class="text-3xl font-bold mb-4">PRAKTIS: Penukaran Nombor Perenambelasan ke Perpuluhan</h1>
       <p id="instructions" class="text-lg opacity-90">Bab 1.2 - Sistem Nombor Perenambelasan | Asas Sains Komputer Tingkatan 2</p>
      </div><!-- Introduction Section -->
-     <div class="mb-8 p-6 rounded-lg border-2 text-left">
-      <h2 class="text-2xl font-bold mb-4 text-center">📚 Pengenalan</h2>
+     <div class="mb-8 p-4 sm:p-6 rounded-lg border-2 text-left">
+      <h2 class="text-xl sm:text-2xl font-bold mb-4 text-center">📚 Pengenalan</h2>
       <div class="space-y-4">
-       <div class="p-4 rounded-lg border border-cyan-300">
-        <h3 class="font-semibold text-lg mb-2">🎯 Objektif Pembelajaran:</h3>
-        <p>Murid dapat menukar nombor perenambelasan (base 16) kepada nombor perpuluhan (base 10) dengan menggunakan kaedah pengembangan kedudukan.</p>
+       <div class="p-3 sm:p-4 rounded-lg border border-cyan-300">
+        <h3 class="font-semibold text-base sm:text-lg mb-2">🎯 Objektif Pembelajaran:</h3>
+        <p class="text-sm sm:text-base">Murid dapat menukar nombor perenambelasan (base 16) kepada nombor perpuluhan (base 10) dengan menggunakan kaedah pengembangan kedudukan.</p>
        </div>
-       <div class="p-4 rounded-lg border border-emerald-300">
-        <h3 class="font-semibold text-lg mb-2">💡 Ingat Kembali:</h3>
-        <div class="grid md:grid-cols-2 gap-4 text-sm">
+       <div class="p-3 sm:p-4 rounded-lg border border-emerald-300">
+        <h3 class="font-semibold text-base sm:text-lg mb-2">💡 Ingat Kembali:</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
          <div><strong>Digit Perenambelasan:</strong><br>
            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F
          </div>
@@ -64,13 +64,13 @@
          </div>
         </div>
        </div>
-       <div class="p-4 rounded-lg border border-purple-300">
-        <h3 class="font-semibold text-lg mb-2">📝 Contoh:</h3>
-        <div class="bg-gray-100 p-4 rounded text-gray-800">
-         <div class="font-bold mb-2">
+       <div class="p-3 sm:p-4 rounded-lg border border-purple-300">
+        <h3 class="font-semibold text-base sm:text-lg mb-2">📝 Contoh:</h3>
+        <div class="bg-gray-100 p-3 sm:p-4 rounded text-gray-800">
+         <div class="font-bold mb-2 text-sm sm:text-base">
           Tukar 2A₁₆ kepada perpuluhan:
          </div>
-         <div class="text-sm space-y-1">
+         <div class="text-xs sm:text-sm space-y-1">
           <div>
            🔍 Langkah 1: 2A₁₆
           </div>
@@ -80,7 +80,7 @@
           <div>
            💡 Langkah 3: 2 = 2, A = 10
           </div>
-          <div>
+          <div class="break-words">
            ⚡ Langkah 4: 2 × 16¹ + 10 × 16⁰ = 2 × 16 + 10 × 1 = 32 + 10
           </div>
           <div class="font-bold text-purple-600">
@@ -102,27 +102,27 @@
       <div id="progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-teal-400 transition-all duration-500 shadow-lg" style="width: 0%"></div>
      </div>
     </div><!-- Question Section -->
-    <div class="mb-8 p-8 rounded-lg border-2 bg-gradient-to-br from-slate-800 to-slate-700 text-white">
+    <div class="mb-8 p-4 sm:p-8 rounded-lg border-2 bg-gradient-to-br from-slate-800 to-slate-700 text-white">
      <div class="text-center mb-6">
       <div class="inline-block px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white font-bold mb-4">
        Soalan <span id="question-number">1</span>
       </div>
-      <div class="text-4xl font-bold mb-2 text-white">
-       Tukarkan <span id="hex-number" class="px-6 py-3 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-lg shadow-lg transform hover:scale-105 transition-transform">A3</span><sub class="text-cyan-400">16</sub> kepada perpuluhan
+      <div class="text-2xl sm:text-4xl font-bold mb-2 text-white">
+       Tukarkan <span id="hex-number" class="px-3 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-lg shadow-lg transform hover:scale-105 transition-transform">A3</span><sub class="text-cyan-400">16</sub> kepada perpuluhan
       </div>
      </div><!-- Answer Input -->
-     <div class="text-center mb-6"><label for="answer-input" class="block text-lg font-medium mb-3 text-cyan-300">💭 Jawapan anda:</label> <input type="number" id="answer-input" class="w-40 p-4 text-2xl text-center border-2 border-cyan-400 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 bg-slate-600 text-white placeholder-slate-400 shadow-lg" placeholder="?">
+     <div class="text-center mb-6"><label for="answer-input" class="block text-base sm:text-lg font-medium mb-3 text-cyan-300">💭 Jawapan anda:</label> <input type="number" id="answer-input" class="w-32 sm:w-40 p-3 sm:p-4 text-xl sm:text-2xl text-center border-2 border-cyan-400 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 bg-slate-600 text-white placeholder-slate-400 shadow-lg" placeholder="?">
      </div><!-- Action Buttons -->
-     <div class="text-center space-x-4"><button id="check-btn" class="px-8 py-4 text-white font-bold rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 transition-all duration-200 hover:scale-105 shadow-lg transform"> <span id="check-button-text">✅ Semak Jawapan</span> </button> <button id="next-btn" class="px-8 py-4 font-bold rounded-xl border-2 border-purple-400 bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-200 hover:scale-105 shadow-lg transform hidden"> <span id="next-button-text">➡️ Soalan Seterusnya</span> </button>
+     <div class="text-center flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"><button id="check-btn" class="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-white font-bold rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 transition-all duration-200 hover:scale-105 shadow-lg transform"> <span id="check-button-text">✅ Semak Jawapan</span> </button> <button id="next-btn" class="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 font-bold rounded-xl border-2 border-purple-400 bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-200 hover:scale-105 shadow-lg transform hidden"> <span id="next-button-text">➡️ Soalan Seterusnya</span> </button>
      </div><!-- Feedback -->
      <div id="feedback" class="mt-6 p-4 rounded-lg text-center hidden">
       <div id="feedback-content"></div>
      </div>
     </div><!-- Results History -->
-    <div class="p-6 rounded-xl border-2 border-purple-400 bg-gradient-to-r from-slate-800 to-slate-700 shadow-lg">
-     <h3 class="text-xl font-semibold mb-4 text-purple-300">📋 Rekod Jawapan</h3>
+    <div class="p-4 sm:p-6 rounded-xl border-2 border-purple-400 bg-gradient-to-r from-slate-800 to-slate-700 shadow-lg">
+     <h3 class="text-lg sm:text-xl font-semibold mb-4 text-purple-300">📋 Rekod Jawapan</h3>
      <div id="results-list" class="space-y-3">
-      <p class="text-center text-slate-400 italic">Belum ada jawapan lagi. Mula jawab soalan! 🚀</p>
+      <p class="text-center text-slate-400 italic text-sm sm:text-base">Belum ada jawapan lagi. Mula jawab soalan! 🚀</p>
      </div>
     </div>
    </div>
@@ -365,53 +365,72 @@
         async function checkAnswer() {
             if (isAnswered) return;
             
-            const userAnswer = parseInt(document.getElementById('answer-input').value);
+            const userAnswerInput = document.getElementById('answer-input').value.trim();
+            
+            // Check if input is empty or not a valid number
+            if (!userAnswerInput || isNaN(userAnswerInput)) {
+                showFeedback(false, '⚠️ Sila masukkan nombor yang sah!');
+                return;
+            }
+            
+            const userAnswer = parseInt(userAnswerInput);
             const isCorrect = userAnswer === currentQuestion.decimal;
             
             isAnswered = true;
             
             // Show loading state
             const checkBtn = document.getElementById('check-btn');
-            const originalText = checkBtn.textContent;
-            checkBtn.textContent = 'Menyemak...';
+            const originalText = checkBtn.innerHTML;
+            checkBtn.innerHTML = '⏳ Menyemak...';
             checkBtn.disabled = true;
             
-            // Save result to Data SDK
-            const result = await window.dataSdk.create({
-                question: `${currentQuestion.hex}₁₆ → ${currentQuestion.decimal}₁₀`,
-                user_answer: userAnswer.toString(),
-                correct_answer: currentQuestion.decimal.toString(),
-                is_correct: isCorrect,
-                timestamp: new Date().toISOString()
-            });
-            
-            if (!result.isOk) {
-                console.error('Failed to save result');
+            try {
+                // Save result to Data SDK
+                if (window.dataSdk) {
+                    const result = await window.dataSdk.create({
+                        question: `${currentQuestion.hex}₁₆ → ${currentQuestion.decimal}₁₀`,
+                        user_answer: userAnswer.toString(),
+                        correct_answer: currentQuestion.decimal.toString(),
+                        is_correct: isCorrect,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    if (!result.isOk) {
+                        console.error('Failed to save result');
+                    }
+                }
+                
+                // Update UI
+                checkBtn.innerHTML = originalText;
+                checkBtn.disabled = false;
+                
+                if (isCorrect) {
+                    correctCount++;
+                    showFeedback(true, `🎉 Betul! ${currentQuestion.hex}₁₆ = ${currentQuestion.decimal}₁₀`);
+                    checkBtn.classList.add('pulse-correct');
+                } else {
+                    showFeedback(false, `❌ Tidak betul. Jawapan yang betul ialah ${currentQuestion.decimal}₁₀`);
+                    checkBtn.classList.add('pulse-wrong');
+                }
+                
+                // Remove animation class after animation completes
+                setTimeout(() => {
+                    checkBtn.classList.remove('pulse-correct', 'pulse-wrong');
+                }, 600);
+                
+                document.getElementById('answer-input').disabled = true;
+                document.getElementById('check-btn').classList.add('hidden');
+                document.getElementById('next-btn').classList.remove('hidden');
+                
+                updateProgress();
+                
+            } catch (error) {
+                console.error('Error in checkAnswer:', error);
+                checkBtn.innerHTML = originalText;
+                checkBtn.disabled = false;
+                showFeedback(false, '❌ Ralat berlaku. Cuba lagi!');
+                isAnswered = false;
             }
-            
-            // Update UI
-            checkBtn.textContent = originalText;
-            checkBtn.disabled = false;
-            
-            if (isCorrect) {
-                correctCount++;
-                showFeedback(true, `🎉 Betul! ${currentQuestion.hex}₁₆ = ${currentQuestion.decimal}₁₀`);
-                checkBtn.classList.add('pulse-correct');
-            } else {
-                showFeedback(false, `❌ Tidak betul. Jawapan yang betul ialah ${currentQuestion.decimal}₁₀`);
-                checkBtn.classList.add('pulse-wrong');
-            }
-            
-            // Remove animation class after animation completes
-            setTimeout(() => {
-                checkBtn.classList.remove('pulse-correct', 'pulse-wrong');
-            }, 600);
-            
-            document.getElementById('answer-input').disabled = true;
-            document.getElementById('check-btn').classList.add('hidden');
-            document.getElementById('next-btn').classList.remove('hidden');
-            
-            updateProgress();
         }
 
         // Show feedback
@@ -460,11 +479,11 @@
             // Show last 5 results
             const recentResults = allResults.slice(-5).reverse();
             container.innerHTML = recentResults.map(result => `
-                <div class="flex justify-between items-center p-4 rounded-lg border-2 ${result.is_correct ? 'border-green-400 bg-green-900/30' : 'border-red-400 bg-red-900/30'} shadow-md">
-                    <span class="font-medium">${result.question}</span>
-                    <div class="flex items-center space-x-3">
-                        <span class="text-sm px-2 py-1 rounded bg-slate-600 text-white">Jawapan: ${result.user_answer}</span>
-                        <span class="${result.is_correct ? 'text-green-400 bg-green-500' : 'text-red-400 bg-red-500'} font-bold px-3 py-1 rounded-full text-white shadow-lg">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 sm:p-4 rounded-lg border-2 ${result.is_correct ? 'border-green-400 bg-green-900/30' : 'border-red-400 bg-red-900/30'} shadow-md gap-2 sm:gap-0">
+                    <span class="font-medium text-sm sm:text-base">${result.question}</span>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                        <span class="text-xs sm:text-sm px-2 py-1 rounded bg-slate-600 text-white text-center">Jawapan: ${result.user_answer}</span>
+                        <span class="${result.is_correct ? 'text-green-400 bg-green-500' : 'text-red-400 bg-red-500'} font-bold px-3 py-1 rounded-full text-white shadow-lg text-xs sm:text-sm text-center">
                             ${result.is_correct ? '✓ BETUL' : '✗ SALAH'}
                         </span>
                     </div>
@@ -512,5 +531,5 @@
         // Start the application
         init();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99510e90a0b8e41e',t:'MTc2MTU1NjE5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9951354643266b5d',t:'MTc2MTU1Nzc3Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
