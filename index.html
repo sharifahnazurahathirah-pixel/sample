@@ -1,173 +1,470 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game Interaktif: Kepelbagaian Iklim Asia</title>
-<style>
-body { font-family: Arial; background:#e0f7fa; text-align:center; margin:0;padding:20px; transition: background 0.3s;}
-h1{color:#2c3e50;}
-.country-btn, .quiz-btn{padding:12px 18px;margin:6px;font-size:16px;background:#3498db;color:white;border:none;border-radius:8px;cursor:pointer;transition:all 0.2s; position:relative;}
-.country-btn:hover, .quiz-btn:hover{transform:scale(1.05); background:#2980b9;}
-.country-btn[data-tooltip]:hover::after{
-  content: attr(data-tooltip);
-  position:absolute; top:-30px; left:50%; transform:translateX(-50%);
-  background:#f1c40f; color:#000; padding:5px 10px; border-radius:6px;
-  font-size:14px; white-space:nowrap;
-}
-.popup, .quiz-popup{position:fixed; top:50%;left:50%;transform:translate(-50%,-50%);background:#fff9c4;padding:20px;border-radius:16px;box-shadow:0 8px 25px rgba(0,0,0,0.4);max-width:400px;display:none; z-index:10;}
-.popup h2, .quiz-popup h2{margin-top:0; color:#f57c00;}
-.popup p, .quiz-popup p{font-size:16px; white-space:pre-line;}
-.close-btn, .next-btn{margin-top:15px; padding:10px 16px;background:#f57c00;color:white;border:none;border-radius:10px;cursor:pointer;}
-.correct {background-color:#27ae60 !important; animation:flash 0.3s;}
-.wrong {background-color:#c0392b !important; animation:flash 0.3s;}
-@keyframes flash{0%{transform:scale(1);}50%{transform:scale(1.1);}100%{transform:scale(1);}}
-.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);display:none; z-index:5;}
-.scoreboard-container{display:flex; justify-content:space-between; max-width:600px; margin:10px auto; font-size:18px; color:#2c3e50;}
-.timer-bar-container{width:100%; max-width:380px; height:15px; background:#ddd; border-radius:8px; margin:10px auto;}
-.timer-bar{height:100%; width:100%; background:#3498db; border-radius:8px; transition:width 1s linear;}
-.feedback-icon {position: fixed; top: 50%; left:50%; transform: translate(-50%, -50%) scale(0); font-size:60px; display:block; z-index:20; pointer-events:none; opacity:0; transition: all 0.5s ease-out;}
-.feedback-icon.show {opacity:1; transform: translate(-50%, -50%) scale(1.5);}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuiz: Nombor Perlapanan ke Perpuluhan</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #333;
+        }
+        
+        html {
+            height: 100%;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: bold;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .quiz-content {
+            padding: 40px;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 12px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #48cae4, #0077b6);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .question-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ff6b6b;
+        }
+        
+        .question-number {
+            color: #ff6b6b;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        
+        .question-text {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .binary-display {
+            background: #2c3e50;
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            font-size: 2em;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            letter-spacing: 3px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .option-btn {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            border: none;
+            padding: 18px 25px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(116, 185, 255, 0.3);
+        }
+        
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(116, 185, 255, 0.4);
+        }
+        
+        .option-btn.correct {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            animation: correctPulse 0.6s ease;
+        }
+        
+        .option-btn.incorrect {
+            background: linear-gradient(135deg, #e17055, #d63031);
+            animation: shake 0.5s ease;
+        }
+        
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .feedback.incorrect {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        
+        .next-btn {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            display: none;
+        }
+        
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(253, 121, 168, 0.4);
+        }
+        
+        .score-display {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .final-score {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #a8e6cf, #88d8a3);
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .final-score h2 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .restart-btn {
+            background: linear-gradient(135deg, #6c5ce7, #5f3dc4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+        }
+        
+        .explanation {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            color: #856404;
+            display: none;
+        }
+        
+        .explanation h4 {
+            margin: 0 0 10px 0;
+            color: #d63031;
+        }
+    </style>
 </head>
 <body>
+    <main class="container">
+        <header class="header">
+            <h1>🔢 Kuiz Perwakilan Data</h1>
+            <p>Tingkatan 2 - Bab 1.1: Menukar Nombor Perlapanan kepada Perpuluhan</p>
+        </header>
+        
+        <div class="quiz-content">
+            <div class="score-display">
+                <strong>Skor: <span id="score">0</span>/10</strong>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            
+            <div id="questionContainer">
+                <!-- Soalan akan dipaparkan di sini -->
+            </div>
+            
+            <div id="finalScore" class="final-score" style="display: none;">
+                <h2>🎉 Tahniah!</h2>
+                <p id="finalScoreText"></p>
+                <p id="gradeText"></p>
+                <button class="restart-btn" onclick="restartQuiz()">Mula Semula</button>
+            </div>
+        </div>
+    </main>
 
-<h1>Game Interaktif: Kepelbagaian Iklim Asia</h1>
+    <script>
+        const questions = [
+            {
+                octal: "12",
+                correct: 10,
+                options: [8, 10, 12, 14]
+            },
+            {
+                octal: "15",
+                correct: 13,
+                options: [11, 12, 13, 15]
+            },
+            {
+                octal: "23",
+                correct: 19,
+                options: [17, 18, 19, 20]
+            },
+            {
+                octal: "37",
+                correct: 31,
+                options: [29, 30, 31, 32]
+            },
+            {
+                octal: "45",
+                correct: 37,
+                options: [35, 36, 37, 38]
+            },
+            {
+                octal: "67",
+                correct: 55,
+                options: [53, 54, 55, 56]
+            },
+            {
+                octal: "123",
+                correct: 83,
+                options: [81, 82, 83, 84]
+            },
+            {
+                octal: "156",
+                correct: 110,
+                options: [108, 109, 110, 111]
+            },
+            {
+                octal: "234",
+                correct: 156,
+                options: [154, 155, 156, 157]
+            },
+            {
+                octal: "345",
+                correct: 229,
+                options: [227, 228, 229, 230]
+            }
+        ];
 
-<div class="scoreboard-container">
-  <div id="scoreboard">Skor: 0</div>
-  <div class="timer" id="timer">Masa: 0s</div>
-</div>
-<div class="timer-bar-container">
-  <div class="timer-bar" id="timer-bar"></div>
-</div>
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
 
-<p>Klik nama negara/rantau untuk belajar info iklim, kemudian cuba kuiz! 🌏</p>
-<div id="country-list"></div>
+        function displayQuestion() {
+            const question = questions[currentQuestion];
+            const container = document.getElementById('questionContainer');
+            
+            container.innerHTML = `
+                <div class="question-card">
+                    <div class="question-number">Soalan ${currentQuestion + 1} daripada ${questions.length}</div>
+                    <div class="question-text">Tukarkan nombor perlapanan berikut kepada nombor perpuluhan:</div>
+                    <div class="binary-display">${question.octal}₈</div>
+                    <div class="options">
+                        ${question.options.map(option => 
+                            `<button class="option-btn" onclick="selectAnswer(${option})">${option}</button>`
+                        ).join('')}
+                    </div>
+                    <div id="feedback" class="feedback"></div>
+                    <div id="explanation" class="explanation">
+                        <h4>Cara Pengiraan:</h4>
+                        <p id="calculationSteps"></p>
+                    </div>
+                    <button id="nextBtn" class="next-btn" onclick="nextQuestion()">Soalan Seterusnya</button>
+                </div>
+            `;
+            
+            answered = false;
+            updateProgress();
+        }
 
-<div class="overlay" id="overlay"></div>
+        function selectAnswer(selectedAnswer) {
+            if (answered) return;
+            
+            answered = true;
+            const question = questions[currentQuestion];
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback');
+            const explanation = document.getElementById('explanation');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (parseInt(btn.textContent) === question.correct) {
+                    btn.classList.add('correct');
+                } else if (parseInt(btn.textContent) === selectedAnswer) {
+                    btn.classList.add('incorrect');
+                }
+            });
+            
+            if (selectedAnswer === question.correct) {
+                score++;
+                feedback.className = 'feedback correct';
+                feedback.textContent = '🎉 Betul! Jawapan anda tepat!';
+                document.getElementById('score').textContent = score;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = `❌ Salah! Jawapan yang betul ialah ${question.correct}`;
+            }
+            
+            // Tunjukkan cara pengiraan
+            const steps = calculateOctalToDecimal(question.octal);
+            document.getElementById('calculationSteps').innerHTML = steps;
+            
+            feedback.style.display = 'block';
+            explanation.style.display = 'block';
+            nextBtn.style.display = 'inline-block';
+        }
 
-<div class="popup" id="popup">
-  <h2 id="popup-title"></h2>
-  <p id="popup-text"></p>
-  <button class="close-btn" onclick="closePopup()">Tutup</button>
-</div>
+        function calculateOctalToDecimal(octal) {
+            let steps = `<strong>${octal}₈ = </strong>`;
+            let calculation = [];
+            let total = 0;
+            
+            for (let i = 0; i < octal.length; i++) {
+                const digit = parseInt(octal[i]);
+                const position = octal.length - 1 - i;
+                const value = digit * Math.pow(8, position);
+                
+                calculation.push(`${digit} × 8<sup>${position}</sup> = ${value}`);
+                total += value;
+            }
+            
+            steps += calculation.join(' + ');
+            steps += ` = <strong>${total}₁₀</strong>`;
+            
+            return steps;
+        }
 
-<div class="quiz-popup" id="quiz-popup">
-  <h2 id="quiz-title">Soalan Kuiz</h2>
-  <p id="quiz-question"></p>
-  <div id="quiz-options"></div>
-  <button class="next-btn" onclick="nextQuiz()">Seterusnya</button>
-</div>
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                displayQuestion();
+            } else {
+                showFinalScore();
+            }
+        }
 
-<div class="feedback-icon" id="feedback-icon">👍</div>
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
 
-<br>
-<button class="country-btn" onclick="startQuiz()">Mulakan Kuiz</button>
+        function showFinalScore() {
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('finalScore').style.display = 'block';
+            
+            const percentage = (score / questions.length) * 100;
+            let grade = '';
+            
+            if (percentage >= 90) grade = 'A+ - Cemerlang! 🌟';
+            else if (percentage >= 80) grade = 'A - Sangat Baik! 👏';
+            else if (percentage >= 70) grade = 'B - Baik! 👍';
+            else if (percentage >= 60) grade = 'C - Sederhana 📚';
+            else grade = 'Perlu lebih banyak latihan 💪';
+            
+            document.getElementById('finalScoreText').textContent = 
+                `Anda mendapat ${score} daripada ${questions.length} soalan betul (${percentage.toFixed(1)}%)`;
+            document.getElementById('gradeText').textContent = `Gred: ${grade}`;
+        }
 
-<script>
-// DATA FLASH CARD
-const countries = [
-  {name:"India", climate:"Monsun Tropika", features:"Panas & lembap, hujan bermusim"},
-  {name:"Thailand", climate:"Monsun Tropika", features:"Panas & lembap sepanjang tahun, hujan tinggi"},
-  {name:"China Utara", climate:"Subtropika Lembap", features:"4 musim, ribut taufan kadang-kadang"},
-  {name:"Jepun", climate:"Subtropika Lembap", features:"4 musim, ribut taufan kadang-kadang"},
-  {name:"Siberia", climate:"Kutub & Sejuk Kontinental", features:"Musim sejuk panjang, suhu sangat rendah"},
-  {name:"Arab Saudi", climate:"Gurun / Arid", features:"Panas kering, hujan sedikit"},
-  {name:"Malaysia", climate:"Tropika Basah", features:"Panas & lembap sepanjang tahun"},
-  {name:"Vietnam", climate:"Monsun Tropika", features:"Panas & lembap, musim hujan jelas"},
-  {name:"Pakistan", climate:"Arid & Monsun Tropika", features:"Panas, kering di barat, hujan bermusim di timur"},
-  {name:"Nepal", climate:"Subtropika & Sejuk Gunung", features:"4 musim, suhu berubah ikut ketinggian"},
-  {name:"Mongolia", climate:"Sejuk Kontinental", features:"Musim sejuk panjang, panas pendek"},
-  {name:"Iran", climate:"Gurun / Semi-Arid", features:"Panas, hujan sedikit"},
-  {name:"Turki", climate:"Mediterranean", features:"Musim panas kering, musim sejuk lembap"},
-  {name:"Afghanistan", climate:"Sejuk Kontinental & Gurun", features:"Musim sejuk panjang, panas pendek"},
-  {name:"Kazakhstan", climate:"Sejuk Kontinental", features:"Musim sejuk panjang, hujan sederhana"},
-  {name:"Myanmar", climate:"Monsun Tropika", features:"Panas & lembap, musim hujan jelas"},
-  {name:"Korea Selatan", climate:"Subtropika Lembap", features:"4 musim, hujan sepanjang tahun"},
-  {name:"Bangladesh", climate:"Monsun Tropika", features:"Hujan lebat musim monsun, panas lembap"},
-  {name:"Indonesia", climate:"Tropika Basah", features:"Panas & lembap sepanjang tahun, hujan tinggi"},
-  {name:"Sri Lanka", climate:"Tropika Monsun", features:"Panas & lembap, hujan musim monsun"}
-];
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById('score').textContent = '0';
+            document.getElementById('questionContainer').style.display = 'block';
+            document.getElementById('finalScore').style.display = 'none';
+            displayQuestion();
+        }
 
-// Generate flash card buttons
-const countryListDiv = document.getElementById("country-list");
-countries.forEach(c=>{
-  const btn = document.createElement("button");
-  btn.textContent = c.name;
-  btn.className = "country-btn";
-  btn.setAttribute("data-tooltip", `Iklim: ${c.climate}`);
-  btn.onclick = ()=>showPopup(c.name, `Iklim: ${c.climate}\nCiri-ciri: ${c.features}`);
-  countryListDiv.appendChild(btn);
-});
-
-// Flash card popup
-const popup = document.getElementById("popup");
-const overlay = document.getElementById("overlay");
-function showPopup(title,text){document.getElementById("popup-title").textContent=title; document.getElementById("popup-text").textContent=text; popup.style.display="block"; overlay.style.display="block";}
-function closePopup(){popup.style.display="none"; overlay.style.display="none";}
-
-// Feedback
-const feedbackIcon = document.getElementById("feedback-icon");
-function showFeedback(correct){ feedbackIcon.classList.remove("show"); if(correct){feedbackIcon.textContent="✅"; feedbackIcon.style.color="#27ae60";} else{feedbackIcon.textContent="❌"; feedbackIcon.style.color="#c0392b";} void feedbackIcon.offsetWidth; feedbackIcon.classList.add("show");}
-
-// Quiz
-let quizData=[], currentQuiz=0, score=0, countdown;
-const quizPopup=document.getElementById("quiz-popup");
-const quizQuestion=document.getElementById("quiz-question");
-const quizOptions=document.getElementById("quiz-options");
-const scoreboard=document.getElementById("scoreboard");
-const timerDiv=document.getElementById("timer");
-const timerBar=document.getElementById("timer-bar");
-
-function shuffleArray(arr){return arr.sort(()=>0.5-Math.random());}
-function generateQuizData(){ const shuffled=shuffleArray([...countries]); quizData=shuffled.slice(0,10).map(c=>{ let options=[c.climate]; while(options.length<3){ const rand=countries[Math.floor(Math.random()*countries.length)].climate; if(!options.includes(rand)) options.push(rand);} return {question:`Apakah jenis iklim di ${c.name}?`, options:shuffleArray(options), answer:c.climate};});}
-
-function startQuiz(){ overlay.style.display="block"; quizPopup.style.display="block"; currentQuiz=0; score=0; generateQuizData(); loadQuiz(); scoreboard.textContent="Skor: 0";}
-
-function loadQuiz(){
-  const data = quizData[currentQuiz];
-  quizQuestion.textContent=data.question;
-  quizOptions.innerHTML="";
-  resetBackground();
-  feedbackIcon.classList.remove("show"); // sembunyikan feedback
-  if(countdown) clearInterval(countdown);
-  let timeLeft=10;
-  timerDiv.textContent=`Masa: ${timeLeft}s`;
-  timerBar.style.width="100%";
-  countdown=setInterval(()=>{timeLeft--; timerDiv.textContent=`Masa: ${timeLeft}s`; timerBar.style.width=(timeLeft/10*100)+"%"; if(timeLeft<=0){clearInterval(countdown); autoWrong();}},1000);
-  data.options.forEach(opt=>{
-    const btn = document.createElement("button");
-    btn.textContent = opt;
-    btn.className="quiz-btn";
-    btn.onclick=()=>checkAnswer(btn, data.answer);
-    quizOptions.appendChild(btn);
-  });
-}
-
-function resetBackground(){ document.body.style.background="#e0f7fa"; }
-function checkAnswer(btn,correct){
-  if(countdown) clearInterval(countdown);
-  if(btn.textContent===correct){btn.classList.add("correct"); flashBackground("#a3e635"); showFeedback(true); score++; scoreboard.textContent="Skor: "+score;} 
-  else{btn.classList.add("wrong"); flashBackground("#f87171"); showFeedback(false); [...quizOptions.children].forEach(b=>{if(b.textContent===correct) b.classList.add("correct");});}
-  [...quizOptions.children].forEach(b=>b.disabled=true);
-}
-
-function flashBackground(color){ document.body.style.background=color; setTimeout(()=>resetBackground(),300);}
-function autoWrong(){ [...quizOptions.children].forEach(b=>{if(!b.disabled) b.classList.add("wrong"); b.disabled=true;}); flashBackground("#f87171"); showFeedback(false); const correct = quizData[currentQuiz].answer; [...quizOptions.children].forEach(b=>{if(b.textContent===correct) b.classList.add("correct");});}
-function nextQuiz(){ 
-  currentQuiz++; 
-  feedbackIcon.classList.remove("show"); // sembunyikan ikon setiap soal
-  if(currentQuiz<quizData.length) loadQuiz();
-  else{ 
-    quizPopup.style.display="none"; 
-    overlay.style.display="none"; 
-    timerDiv.textContent="Masa: 0s"; 
-    timerBar.style.width="0%"; 
-    alert(`Tahniah! Kuiz selesai.\nSkor anda: ${score}/${quizData.length}`);
-  }
-}
-</script>
-
-</body>
+        // Mula kuiz
+        displayQuestion();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'994eadca4320a559',t:'MTc2MTUzMTI1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
