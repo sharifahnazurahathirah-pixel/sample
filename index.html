@@ -1,886 +1,566 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ms">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Permainan Penterjemah Bahasa Pengaturcaraan</title>
-    <style>
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kuiz Pendidikan Islam Tingkatan 2</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
         body {
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 25%, #fecfef 50%, #a8edea 75%, #fed6e3 100%);
-            min-height: 100%;
-            color: #333;
-            animation: gradientShift 8s ease-in-out infinite;
         }
-
-        @keyframes gradientShift {
-            0% { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 25%, #a8edea 50%, #fed6e3 75%, #667eea 100%); }
-            25% { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 25%, #ff9a9e 50%, #fecfef 75%, #764ba2 100%); }
-            50% { background: linear-gradient(135deg, #fed6e3 0%, #667eea 25%, #764ba2 50%, #ff9a9e 75%, #a8edea 100%); }
-            75% { background: linear-gradient(135deg, #fecfef 0%, #a8edea 25%, #fed6e3 50%, #667eea 75%, #ff9a9e 100%); }
-            100% { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 25%, #a8edea 50%, #fed6e3 75%, #667eea 100%); }
-        }
-
-        html {
-            height: 100%;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            color: #4a5568;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .header p {
-            color: #718096;
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-        }
-
-        .score-board {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .score-item {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 15px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
-        }
-
-        .game-area {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 30px;
-        }
-
-        .languages-section {
-            background: #f8fafc;
-            padding: 25px;
-            border-radius: 15px;
-            border: 2px solid #e2e8f0;
-        }
-
-        .languages-section h3 {
-            color: #2d3748;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-            text-align: center;
-        }
-
-        .language-item {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-            color: #2d3748;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 12px;
-            cursor: grab;
+        
+        .question-card {
             transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            font-weight: 600;
-            text-align: center;
-            user-select: none;
         }
-
-        .language-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        
+        .option-btn {
+            transition: all 0.2s ease;
         }
-
-        .language-item:active {
-            cursor: grabbing;
-            transform: scale(0.95);
+        
+        .option-btn:hover {
+            transform: translateX(8px);
         }
-
-        /* Touch support for mobile */
-        .language-item {
-            touch-action: none;
+        
+        .correct {
+            background-color: #10b981 !important;
+            border-color: #059669 !important;
         }
-
-        .language-item.touch-dragging {
-            opacity: 0.7;
-            transform: scale(1.1) rotate(5deg);
-            z-index: 1000;
-            position: fixed;
-            pointer-events: none;
+        
+        .incorrect {
+            background-color: #ef4444 !important;
+            border-color: #dc2626 !important;
         }
-
-        .language-item.dragging {
-            opacity: 0.5;
-            transform: rotate(5deg);
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
         }
-
-        .translators-section {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .translator-box {
-            background: #ffffff;
-            border: 3px dashed #cbd5e0;
-            border-radius: 15px;
-            padding: 20px;
-            min-height: 80px;
-            transition: all 0.3s ease;
-            position: relative;
+        
+        .celebration {
+            animation: celebrate 0.6s ease-out;
         }
-
-        .translator-box.drag-over {
-            border-color: #4299e1;
-            background: #ebf8ff;
-            transform: scale(1.02);
-        }
-
-        .translator-box.correct {
-            border-color: #48bb78;
-            background: #f0fff4;
-            border-style: solid;
-        }
-
-        .translator-box.incorrect {
-            border-color: #f56565;
-            background: #fff5f5;
-            border-style: solid;
-            animation: shake 0.5s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        .translator-title {
-            font-weight: bold;
-            color: #2d3748;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .translator-description {
-            color: #718096;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-
-        .dropped-items {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            min-height: 40px;
-        }
-
-        .dropped-item {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            color: #2d3748;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: relative;
-        }
-
-        .remove-btn {
-            background: #f56565;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            margin-left: 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            color: #2d3748;
-            box-shadow: 0 4px 15px rgba(252, 182, 159, 0.4);
-        }
-
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(252, 182, 159, 0.6);
-        }
-
-        .feedback {
-            text-align: center;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 20px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            display: none;
-        }
-
-        .feedback.success {
-            background: #f0fff4;
-            color: #22543d;
-            border: 2px solid #48bb78;
-        }
-
-        .feedback.error {
-            background: #fff5f5;
-            color: #742a2a;
-            border: 2px solid #f56565;
-        }
-
-        .emoji {
-            font-size: 1.5rem;
-            margin-right: 10px;
-        }
-
-        .intro-screen {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .intro-content h1 {
-            color: #4a5568;
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .intro-text {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: left;
-        }
-
-        .intro-text > p {
-            font-size: 1.1rem;
-            color: #4a5568;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .intro-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .intro-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-            text-align: center;
-        }
-
-        .card-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-
-        .intro-card h3 {
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-        }
-
-        .intro-card p {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            line-height: 1.4;
-        }
-
-        .intro-instructions {
-            background: #f8fafc;
-            padding: 25px;
-            border-radius: 15px;
-            margin: 30px 0;
-            border: 2px solid #e2e8f0;
-        }
-
-        .intro-instructions h3 {
-            color: #2d3748;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .intro-instructions ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .intro-instructions li {
-            background: white;
-            padding: 12px 20px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .btn-large {
-            font-size: 1.2rem;
-            padding: 15px 40px;
-            margin-top: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .game-area {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .score-board {
-                gap: 15px;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .intro-content h1 {
-                font-size: 2rem;
-            }
-
-            .intro-cards {
-                grid-template-columns: 1fr;
-            }
+        
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
     </style>
-</head>
-<body>
-    <div class="container">
-        <div id="intro-screen" class="intro-screen">
-            <div class="intro-content">
-                <h1>🎯 Penterjemah Bahasa Pengaturcaraan</h1>
-                <div class="intro-text">
-                    <p>Selamat datang ke permainan ASK Tingkatan 2 - Bab 3: Kod Arahan!</p>
-                    <p>Dalam permainan ini, anda akan belajar tentang 3 jenis penterjemah bahasa pengaturcaraan:</p>
-                    
-                    <div class="intro-cards">
-                        <div class="intro-card">
-                            <div class="card-icon">🔧</div>
-                            <h3>Penghimpun (Assembler)</h3>
-                            <p>Menterjemah bahasa assembly kepada kod mesin</p>
-                        </div>
-                        <div class="intro-card">
-                            <div class="card-icon">⚙️</div>
-                            <h3>Pengkompil (Compiler)</h3>
-                            <p>Menterjemah keseluruhan kod sumber kepada kod mesin sebelum pelaksanaan</p>
-                        </div>
-                        <div class="intro-card">
-                            <div class="card-icon">🔄</div>
-                            <h3>Pentafsir (Interpreter)</h3>
-                            <p>Menterjemah dan melaksana kod baris demi baris secara langsung</p>
-                        </div>
-                    </div>
-                    
-                    <div class="intro-instructions">
-                        <h3>📋 Cara Bermain:</h3>
-                        <ul>
-                            <li><strong>PC:</strong> Seret dan lepas bahasa pengaturcaraan ke kotak penterjemah</li>
-                            <li><strong>HP:</strong> Tekan dan tahan, kemudian seret ke kotak penterjemah</li>
-                            <li><strong>PENTING:</strong> Seret SEMUA 8 bahasa pengaturcaraan dahulu</li>
-                            <li>Selepas semua diseret, baru tekan "Semak Jawapan"</li>
-                            <li>Sistem akan tunjukkan jawapan yang betul jika salah</li>
-                            <li>Dapatkan 10 mata untuk setiap jawapan betul</li>
-                        </ul>
-                    </div>
-                </div>
-                <button class="btn btn-primary btn-large" onclick="startGame()">
-                    <span class="emoji">🚀</span>Mula Permainan
-                </button>
-            </div>
-        </div>
-
-        <div id="game-screen" class="game-screen" style="display: none;">
-            <header class="header">
-                <h1>🎯 Penterjemah Bahasa Pengaturcaraan</h1>
-                <p>Seret dan lepaskan bahasa pengaturcaraan ke penterjemah yang betul!</p>
-            </header>
-
-        <div class="score-board">
-            <div class="score-item">
-                <span class="emoji">🎯</span>Skor: <span id="score">0</span>
-            </div>
-            <div class="score-item">
-                <span class="emoji">✅</span>Betul: <span id="correct">0</span>
-            </div>
-            <div class="score-item">
-                <span class="emoji">❌</span>Salah: <span id="incorrect">0</span>
-            </div>
-        </div>
-
-        <div class="game-area">
-            <div class="languages-section">
-                <h3>🔤 Bahasa Pengaturcaraan</h3>
-                <div id="languages-container">
-                    <div class="language-item" draggable="true" data-language="Assembly">
-                        Assembly Language
-                    </div>
-                    <div class="language-item" draggable="true" data-language="C++">
-                        C++
-                    </div>
-                    <div class="language-item" draggable="true" data-language="Java">
-                        Java
-                    </div>
-                    <div class="language-item" draggable="true" data-language="Python">
-                        Python
-                    </div>
-                    <div class="language-item" draggable="true" data-language="JavaScript">
-                        JavaScript
-                    </div>
-                    <div class="language-item" draggable="true" data-language="Ruby">
-                        Ruby
-                    </div>
-                    <div class="language-item" draggable="true" data-language="Pascal">
-                        Pascal
-                    </div>
-                    <div class="language-item" draggable="true" data-language="PHP">
-                        PHP
-                    </div>
-                </div>
-            </div>
-
-            <div class="translators-section">
-                <div class="translator-box" data-translator="assembler">
-                    <div class="translator-title">
-                        <span class="emoji">🔧</span>Penghimpun (Assembler)
-                    </div>
-                    <div class="translator-description">
-                        Menterjemah bahasa assembly kepada kod mesin
-                    </div>
-                    <div class="dropped-items" id="assembler-items"></div>
-                </div>
-
-                <div class="translator-box" data-translator="compiler">
-                    <div class="translator-title">
-                        <span class="emoji">⚙️</span>Pengkompil (Compiler)
-                    </div>
-                    <div class="translator-description">
-                        Menterjemah keseluruhan kod sumber kepada kod mesin sebelum pelaksanaan
-                    </div>
-                    <div class="dropped-items" id="compiler-items"></div>
-                </div>
-
-                <div class="translator-box" data-translator="interpreter">
-                    <div class="translator-title">
-                        <span class="emoji">🔄</span>Pentafsir (Interpreter)
-                    </div>
-                    <div class="translator-description">
-                        Menterjemah dan melaksana kod baris demi baris secara langsung
-                    </div>
-                    <div class="dropped-items" id="interpreter-items"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="controls">
-            <button class="btn btn-primary" onclick="checkAnswers()">
-                <span class="emoji">✅</span>Semak Jawapan
-            </button>
-            <button class="btn btn-secondary" onclick="resetGame()">
-                <span class="emoji">🔄</span>Mula Semula
-            </button>
-        </div>
-
-            <div class="feedback" id="feedback"></div>
-        </div>
-    </div>
-
-    <script>
-        // Jawapan yang betul
-        const correctAnswers = {
-            assembler: ['Assembly'],
-            compiler: ['C++', 'Java', 'Pascal'],
-            interpreter: ['Python', 'JavaScript', 'PHP', 'Ruby']
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="min-h-full flex items-center justify-center p-4">
+  <div id="app" class="w-full max-w-3xl"></div>
+  <script>
+        const defaultConfig = {
+            background_color: "#f0f9ff",
+            surface_color: "#ffffff",
+            text_color: "#1e293b",
+            primary_action_color: "#0ea5e9",
+            secondary_action_color: "#64748b",
+            quiz_title: "Kuiz Pendidikan Islam Pelajaran 23",
+            quiz_subtitle: "",
+            font_family: "Inter",
+            font_size: 16
         };
 
+        const questions = [
+            {
+                id: 1,
+                question: "Siapakah nama sebenar Sayidatina Khadijah r.a.?",
+                options: [
+                    "Khadijah binti Huzaifah",
+                    "Khadijah binti Khuzaimah",
+                    "Khadijah binti Khuwailid",
+                    "Khadijah binti Umar"
+                ],
+                correct: 2
+            },
+            {
+                id: 2,
+                question: "Sayidatina Aisyah r.a. berketurunan _______________.",
+                options: [
+                    "Bani Tsaqif",
+                    "Bani Hashim",
+                    "Bani Abd Manaf",
+                    "Bangsawan Quraisy (Suku Bani Tamim)"
+                ],
+                correct: 3
+            },
+            {
+                id: 3,
+                question: "Berapakah umur wafat Sayidatina Fatimah r.a.?",
+                options: [
+                    "20 tahun",
+                    "25 tahun",
+                    "28 tahun",
+                    "30 tahun"
+                ],
+                correct: 2
+            },
+            {
+                id: 4,
+                question: "Berikut adalah iktibar daripada perjuangan Sayidatina Aisyah r.a. kecuali",
+                options: [
+                    "Bersedekah dan suka membantu",
+                    "Belajar bersungguh-sungguh hingga menjadi pakar",
+                    "Sentiasa bersabar, berdoa serta berserah diri kepada Allah SWT",
+                    "Berusaha menjadi anak yang soleh dan tegas menegakkan kebenaran"
+                ],
+                correct: 3
+            },
+            {
+                id: 5,
+                question: "Gelaran 'Al-Humaira' bagi Sayidatina Aisyah r.a. merujuk kepada ________________.",
+                options: [
+                    "Berkulit cerah",
+                    "Putih kekuningan",
+                    "Putih kemerah-merahan",
+                    "Kemerah-merahan gelap"
+                ],
+                correct: 2
+            },
+            {
+                id: 6,
+                question: "Antara berikut, yang manakah merupakan sifat utama Sayidatina Khadijah r.a.?",
+                options: [
+                    "Bijak bertindak",
+                    "Kurang bercakap",
+                    "Suka bersendirian",
+                    "Pemarah dan tegas"
+                ],
+                correct: 0
+            },
+            {
+                id: 7,
+                question: "Sumbangan Sayidatina Fatimah r.a. dalam dakwah ialah _______________________.",
+                options: [
+                    "Berjaya mendidik anak-anaknya menjadi Muslim yang soleh",
+                    "Membelanjakan semua hartanya untuk Islam",
+                    "Mengajar wanita Quraisy berniaga",
+                    "Menjadi penasihat kabilah Arab"
+                ],
+                correct: 0
+            },
+            {
+                id: 8,
+                question: "Siapakah suami kepada Sayidatina Sumaiyah r.a.?",
+                options: [
+                    "Uthman bin Affan",
+                    "Zaid bin Harithah",
+                    "Ali bin Abi Talib",
+                    "Yasir bin Amir"
+                ],
+                correct: 3
+            },
+            {
+                id: 9,
+                question: "Tokoh wanita Islam yang sanggup menggadaikan nyawa demi Islam ialah ____________________________.",
+                options: [
+                    "Sayidatina Aisyah r.a.",
+                    "Sayidatina Fatimah r.a.",
+                    "Sayidatina Khadijah r.a.",
+                    "Sayidatina Sumaiyah r.a."
+                ],
+                correct: 3
+            },
+            {
+                id: 10,
+                question: "Apakah kedudukan Sayidatina Fatimah r.a. dalam keluarga?",
+                options: [
+                    "Puteri bongsu Rasulullah SAW dan Sayidatina Khadijah r.a.",
+                    "Puteri sulung Rasulullah SAW dan Sayidatina Khadijah r.a.",
+                    "Puteri kedua Rasulullah SAW dan Sayidatina Khadijah r.a.",
+                    "Puteri keempat Rasulullah SAW dan Sayidatina Khadijah r.a."
+                ],
+                correct: 0
+            }
+        ];
+
+        let currentQuestion = 0;
         let score = 0;
-        let correctCount = 0;
-        let incorrectCount = 0;
-        let draggedElement = null;
+        let answered = false;
+        let quizCompleted = false;
+        let isSubmitting = false;
 
-        // Touch support variables
-        let touchItem = null;
-        let touchOffset = { x: 0, y: 0 };
+        const dataHandler = {
+            onDataChanged(data) {
+                // No UI updates needed for write-only quiz
+            }
+        };
 
-        // Event listeners untuk drag and drop
-        document.addEventListener('DOMContentLoaded', function() {
-            setupDragAndDrop();
-            setupTouchEvents();
-            updateScoreBoard();
-        });
+        async function onConfigChange(config) {
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseSize = config.font_size || defaultConfig.font_size;
+            const baseFontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 
-        function setupDragAndDrop() {
-            // Setup draggable items
-            const languageItems = document.querySelectorAll('.language-item');
-            languageItems.forEach(item => {
-                item.addEventListener('dragstart', handleDragStart);
-                item.addEventListener('dragend', handleDragEnd);
+            document.body.style.backgroundColor = config.background_color || defaultConfig.background_color;
+            document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
+
+            const appElement = document.getElementById('app');
+            if (appElement) {
+                appElement.style.color = config.text_color || defaultConfig.text_color;
+            }
+
+            const titleElement = document.getElementById('quiz-title');
+            if (titleElement) {
+                titleElement.textContent = config.quiz_title || defaultConfig.quiz_title;
+                titleElement.style.fontSize = `${baseSize * 2}px`;
+                titleElement.style.color = config.text_color || defaultConfig.text_color;
+            }
+
+            const subtitleElement = document.getElementById('quiz-subtitle');
+            if (subtitleElement) {
+                subtitleElement.textContent = config.quiz_subtitle || defaultConfig.quiz_subtitle;
+                subtitleElement.style.fontSize = `${baseSize * 1.125}px`;
+                subtitleElement.style.color = config.text_color || defaultConfig.text_color;
+            }
+
+            const cards = document.querySelectorAll('.question-card');
+            cards.forEach(card => {
+                card.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
             });
 
-            // Setup drop zones
-            const translatorBoxes = document.querySelectorAll('.translator-box');
-            translatorBoxes.forEach(box => {
-                box.addEventListener('dragover', handleDragOver);
-                box.addEventListener('drop', handleDrop);
-                box.addEventListener('dragenter', handleDragEnter);
-                box.addEventListener('dragleave', handleDragLeave);
-            });
-        }
-
-        function setupTouchEvents() {
-            const languageItems = document.querySelectorAll('.language-item');
-            languageItems.forEach(item => {
-                item.addEventListener('touchstart', handleTouchStart, { passive: false });
-                item.addEventListener('touchmove', handleTouchMove, { passive: false });
-                item.addEventListener('touchend', handleTouchEnd, { passive: false });
-            });
-        }
-
-        function handleTouchStart(e) {
-            e.preventDefault();
-            touchItem = e.target;
-            const touch = e.touches[0];
-            const rect = touchItem.getBoundingClientRect();
-            touchOffset.x = touch.clientX - rect.left;
-            touchOffset.y = touch.clientY - rect.top;
-            touchItem.classList.add('touch-dragging');
-        }
-
-        function handleTouchMove(e) {
-            e.preventDefault();
-            if (!touchItem) return;
-            
-            const touch = e.touches[0];
-            touchItem.style.left = (touch.clientX - touchOffset.x) + 'px';
-            touchItem.style.top = (touch.clientY - touchOffset.y) + 'px';
-        }
-
-        function handleTouchEnd(e) {
-            e.preventDefault();
-            if (!touchItem) return;
-            
-            const touch = e.changedTouches[0];
-            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
-            const translatorBox = elementBelow ? elementBelow.closest('.translator-box') : null;
-            
-            if (translatorBox) {
-                const language = touchItem.dataset.language;
-                const translator = translatorBox.dataset.translator;
-                addItemToTranslator(translator, language);
-                touchItem.remove();
-            }
-            
-            // Reset touch item
-            if (touchItem) {
-                touchItem.classList.remove('touch-dragging');
-                touchItem.style.left = '';
-                touchItem.style.top = '';
-            }
-            touchItem = null;
-        }
-
-        function handleDragStart(e) {
-            draggedElement = e.target;
-            e.target.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', e.target.outerHTML);
-        }
-
-        function handleDragEnd(e) {
-            e.target.classList.remove('dragging');
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-        }
-
-        function handleDragEnter(e) {
-            e.preventDefault();
-            e.target.closest('.translator-box').classList.add('drag-over');
-        }
-
-        function handleDragLeave(e) {
-            if (!e.target.closest('.translator-box').contains(e.relatedTarget)) {
-                e.target.closest('.translator-box').classList.remove('drag-over');
-            }
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            const translatorBox = e.target.closest('.translator-box');
-            translatorBox.classList.remove('drag-over');
-            
-            if (draggedElement) {
-                const language = draggedElement.dataset.language;
-                const translator = translatorBox.dataset.translator;
-                
-                // Tambah item ke translator box
-                addItemToTranslator(translator, language);
-                
-                // Buang item asal
-                draggedElement.remove();
-                draggedElement = null;
-            }
-        }
-
-        function addItemToTranslator(translator, language) {
-            const container = document.getElementById(translator + '-items');
-            const droppedItem = document.createElement('div');
-            droppedItem.className = 'dropped-item';
-            droppedItem.innerHTML = `
-                ${language}
-                <button class="remove-btn" onclick="removeItem(this, '${language}', '${translator}')" title="Buang">×</button>
-            `;
-            container.appendChild(droppedItem);
-        }
-
-        function removeItem(button, language, translator) {
-            // Buang item dari translator box
-            button.parentElement.remove();
-            
-            // Tambah semula ke senarai bahasa
-            const languagesContainer = document.getElementById('languages-container');
-            const languageItem = document.createElement('div');
-            languageItem.className = 'language-item';
-            languageItem.draggable = true;
-            languageItem.dataset.language = language;
-            languageItem.textContent = language === 'Assembly' ? 'Assembly Language' : language;
-            
-            // Setup drag events untuk item baru
-            languageItem.addEventListener('dragstart', handleDragStart);
-            languageItem.addEventListener('dragend', handleDragEnd);
-            
-            languagesContainer.appendChild(languageItem);
-        }
-
-        function startGame() {
-            document.getElementById('intro-screen').style.display = 'none';
-            document.getElementById('game-screen').style.display = 'block';
-        }
-
-        function checkAnswers() {
-            // Semak sama ada semua bahasa telah diseret
-            const remainingLanguages = document.querySelectorAll('#languages-container .language-item');
-            if (remainingLanguages.length > 0) {
-                showFeedback(-1, -1); // Special case untuk incomplete
-                return;
+            const questionText = document.getElementById('question-text');
+            if (questionText) {
+                questionText.style.fontSize = `${baseSize * 1.25}px`;
+                questionText.style.color = config.text_color || defaultConfig.text_color;
             }
 
-            let totalCorrect = 0;
-            let totalIncorrect = 0;
-            let wrongAnswers = [];
-            
-            // Reset semua translator boxes
-            document.querySelectorAll('.translator-box').forEach(box => {
-                box.classList.remove('correct', 'incorrect');
-            });
+            const progressText = document.getElementById('progress-text');
+            if (progressText) {
+                progressText.style.fontSize = `${baseSize * 0.875}px`;
+                progressText.style.color = config.text_color || defaultConfig.text_color;
+            }
 
-            // Semak setiap translator
-            Object.keys(correctAnswers).forEach(translator => {
-                const container = document.getElementById(translator + '-items');
-                const items = container.querySelectorAll('.dropped-item');
-                const translatorBox = document.querySelector(`[data-translator="${translator}"]`);
-                
-                let isCorrect = true;
-                const droppedLanguages = [];
-                
-                items.forEach(item => {
-                    const language = item.textContent.replace('×', '').trim();
-                    droppedLanguages.push(language);
-                });
-                
-                // Semak sama ada semua item betul dan lengkap
-                const expectedLanguages = correctAnswers[translator];
-                
-                if (droppedLanguages.length !== expectedLanguages.length) {
-                    isCorrect = false;
-                } else {
-                    droppedLanguages.forEach(lang => {
-                        if (!expectedLanguages.includes(lang)) {
-                            isCorrect = false;
-                        }
-                    });
+            const options = document.querySelectorAll('.option-btn');
+            options.forEach(option => {
+                if (!option.classList.contains('correct') && !option.classList.contains('incorrect')) {
+                    option.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
+                    option.style.borderColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+                    option.style.color = config.text_color || defaultConfig.text_color;
                 }
-                
-                if (isCorrect && droppedLanguages.length > 0) {
-                    translatorBox.classList.add('correct');
-                    totalCorrect++;
-                } else if (droppedLanguages.length > 0) {
-                    translatorBox.classList.add('incorrect');
-                    totalIncorrect++;
+                option.style.fontSize = `${baseSize}px`;
+            });
+
+            const primaryButtons = document.querySelectorAll('.primary-btn');
+            primaryButtons.forEach(btn => {
+                btn.style.backgroundColor = config.primary_action_color || defaultConfig.primary_action_color;
+                btn.style.fontSize = `${baseSize}px`;
+            });
+
+            const secondaryButtons = document.querySelectorAll('.secondary-btn');
+            secondaryButtons.forEach(btn => {
+                btn.style.backgroundColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+                btn.style.fontSize = `${baseSize}px`;
+            });
+
+            const labels = document.querySelectorAll('.form-label');
+            labels.forEach(label => {
+                label.style.fontSize = `${baseSize * 0.875}px`;
+                label.style.color = config.text_color || defaultConfig.text_color;
+            });
+
+            const inputs = document.querySelectorAll('input[type="text"]');
+            inputs.forEach(input => {
+                input.style.fontSize = `${baseSize}px`;
+                input.style.borderColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+            });
+
+            const resultTitle = document.getElementById('result-title');
+            if (resultTitle) {
+                resultTitle.style.fontSize = `${baseSize * 2}px`;
+                resultTitle.style.color = config.text_color || defaultConfig.text_color;
+            }
+
+            const scoreDisplay = document.getElementById('score-display');
+            if (scoreDisplay) {
+                scoreDisplay.style.fontSize = `${baseSize * 3}px`;
+                scoreDisplay.style.color = config.primary_action_color || defaultConfig.primary_action_color;
+            }
+
+            const resultText = document.getElementById('result-text');
+            if (resultText) {
+                resultText.style.fontSize = `${baseSize * 1.125}px`;
+                resultText.style.color = config.text_color || defaultConfig.text_color;
+            }
+        }
+
+
+
+        function renderQuestion() {
+            const config = window.elementSdk?.config || defaultConfig;
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseSize = config.font_size || defaultConfig.font_size;
+            const baseFontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+            
+            answered = false;
+            const question = questions[currentQuestion];
+            
+            document.getElementById('app').innerHTML = `
+                <div class="text-center mb-6 fade-in">
+                    <h1 id="quiz-title" class="font-bold mb-1" style="font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize * 1.5}px; color: ${config.text_color || defaultConfig.text_color}">${config.quiz_title || defaultConfig.quiz_title}</h1>
+                    <p id="quiz-subtitle" class="text-sm" style="font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize * 0.875}px; color: ${config.text_color || defaultConfig.text_color}">${config.quiz_subtitle || defaultConfig.quiz_subtitle}</p>
+                </div>
+                <div class="question-card bg-white rounded-2xl shadow-xl p-8 fade-in" style="background-color: ${config.surface_color || defaultConfig.surface_color}">
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <span id="progress-text" class="font-medium" style="font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize * 0.875}px; color: ${config.text_color || defaultConfig.text_color}">Soalan ${currentQuestion + 1} / ${questions.length}</span>
+                            <span class="font-bold" style="font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize * 0.875}px; color: ${config.text_color || defaultConfig.text_color}">Markah: ${score}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="h-2.5 rounded-full transition-all duration-300" style="width: ${((currentQuestion + 1) / questions.length) * 100}%; background-color: ${config.primary_action_color || defaultConfig.primary_action_color}"></div>
+                        </div>
+                    </div>
                     
-                    // Simpan jawapan yang salah
-                    const translatorName = translator === 'assembler' ? 'Penghimpun (Assembler)' : 
-                                         translator === 'compiler' ? 'Pengkompil (Compiler)' : 
-                                         'Pentafsir (Interpreter)';
-                    wrongAnswers.push({
-                        translator: translatorName,
-                        correct: expectedLanguages.join(', ')
-                    });
-                }
-            });
-
-            // Update skor
-            correctCount += totalCorrect;
-            incorrectCount += totalIncorrect;
-            score = correctCount * 10 - incorrectCount * 5;
-            updateScoreBoard();
-
-            // Tunjuk feedback
-            showFeedback(totalCorrect, totalIncorrect, wrongAnswers);
+                    <h2 id="question-text" class="font-bold mb-8" style="font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize * 1.25}px; color: ${config.text_color || defaultConfig.text_color}">${question.question}</h2>
+                    
+                    <div class="space-y-3" id="options-container">
+                        ${question.options.map((option, index) => `
+                            <button 
+                                onclick="selectAnswer(${index})"
+                                class="option-btn w-full text-left px-6 py-4 border-2 rounded-lg font-medium hover:shadow-md"
+                                style="background-color: ${config.surface_color || defaultConfig.surface_color}; border-color: ${config.secondary_action_color || defaultConfig.secondary_action_color}; color: ${config.text_color || defaultConfig.text_color}; font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize}px"
+                            >
+                                ${String.fromCharCode(65 + index)}. ${option}
+                            </button>
+                        `).join('')}
+                    </div>
+                    
+                    <div id="feedback" class="mt-6 min-h-[60px]"></div>
+                    
+                    <button 
+                        id="next-btn"
+                        onclick="nextQuestion()"
+                        class="primary-btn w-full text-white font-semibold py-4 rounded-lg mt-6 opacity-50 cursor-not-allowed"
+                        style="background-color: ${config.primary_action_color || defaultConfig.primary_action_color}; font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize}px"
+                        disabled
+                    >
+                        ${currentQuestion === questions.length - 1 ? 'Selesai' : 'Soalan Seterusnya'}
+                    </button>
+                </div>
+            `;
         }
 
-        function showFeedback(correct, incorrect, wrongAnswers = []) {
+        function selectAnswer(selectedIndex) {
+            if (answered) return;
+            
+            answered = true;
+            const config = window.elementSdk?.config || defaultConfig;
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseSize = config.font_size || defaultConfig.font_size;
+            const baseFontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+            const question = questions[currentQuestion];
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons.forEach((btn, index) => {
+                btn.disabled = true;
+                btn.style.cursor = 'not-allowed';
+                
+                if (index === question.correct) {
+                    btn.classList.add('correct');
+                    btn.style.backgroundColor = '#10b981';
+                    btn.style.borderColor = '#059669';
+                    btn.style.color = '#ffffff';
+                }
+                
+                if (index === selectedIndex && selectedIndex !== question.correct) {
+                    btn.classList.add('incorrect');
+                    btn.style.backgroundColor = '#ef4444';
+                    btn.style.borderColor = '#dc2626';
+                    btn.style.color = '#ffffff';
+                }
+            });
+            
+            const isCorrect = selectedIndex === question.correct;
+            if (isCorrect) {
+                score++;
+            }
+            
             const feedback = document.getElementById('feedback');
-            feedback.style.display = 'block';
-            
-            // Special case untuk incomplete
-            if (correct === -1 && incorrect === -1) {
-                feedback.className = 'feedback error';
-                feedback.innerHTML = '⚠️ Sila seret SEMUA 8 bahasa pengaturcaraan dahulu sebelum menekan "Semak Jawapan"!';
-                setTimeout(() => {
-                    feedback.style.display = 'none';
-                }, 4000);
-                return;
-            }
-            
-            if (correct === 3 && incorrect === 0) {
-                feedback.className = 'feedback success';
-                feedback.innerHTML = '🎉 Tahniah! Semua jawapan betul! Anda memahami jenis-jenis penterjemah dengan baik!';
-            } else if (correct > incorrect) {
-                feedback.className = 'feedback success';
-                let message = `👍 Bagus! ${correct} betul, ${incorrect} salah. Teruskan usaha!`;
-                if (wrongAnswers.length > 0) {
-                    message += '<br><br><strong>Jawapan yang betul:</strong><br>';
-                    wrongAnswers.forEach(item => {
-                        message += `• ${item.translator}: ${item.correct}<br>`;
-                    });
-                }
-                feedback.innerHTML = message;
-            } else {
-                feedback.className = 'feedback error';
-                let message = `💪 Cuba lagi! ${correct} betul, ${incorrect} salah.`;
-                if (wrongAnswers.length > 0) {
-                    message += '<br><br><strong>Jawapan yang betul:</strong><br>';
-                    wrongAnswers.forEach(item => {
-                        message += `• ${item.translator}: ${item.correct}<br>`;
-                    });
-                }
-                feedback.innerHTML = message;
-            }
-            
-            setTimeout(() => {
-                feedback.style.display = 'none';
-            }, 8000);
-        }
-
-        function updateScoreBoard() {
-            document.getElementById('score').textContent = score;
-            document.getElementById('correct').textContent = correctCount;
-            document.getElementById('incorrect').textContent = incorrectCount;
-        }
-
-        function resetGame() {
-            // Reset skor
-            score = 0;
-            correctCount = 0;
-            incorrectCount = 0;
-            updateScoreBoard();
-            
-            // Kosongkan semua translator boxes
-            document.querySelectorAll('.dropped-items').forEach(container => {
-                container.innerHTML = '';
-            });
-            
-            // Reset translator box classes
-            document.querySelectorAll('.translator-box').forEach(box => {
-                box.classList.remove('correct', 'incorrect');
-            });
-            
-            // Tambah semula semua bahasa
-            const languagesContainer = document.getElementById('languages-container');
-            languagesContainer.innerHTML = `
-                <div class="language-item" draggable="true" data-language="Assembly">Assembly Language</div>
-                <div class="language-item" draggable="true" data-language="C++">C++</div>
-                <div class="language-item" draggable="true" data-language="Java">Java</div>
-                <div class="language-item" draggable="true" data-language="Python">Python</div>
-                <div class="language-item" draggable="true" data-language="JavaScript">JavaScript</div>
-                <div class="language-item" draggable="true" data-language="Ruby">Ruby</div>
-                <div class="language-item" draggable="true" data-language="Pascal">Pascal</div>
-                <div class="language-item" draggable="true" data-language="PHP">PHP</div>
+            feedback.innerHTML = `
+                <div class="p-4 rounded-lg ${isCorrect ? 'bg-green-100 border-2 border-green-400' : 'bg-red-100 border-2 border-red-400'}">
+                    <p class="font-semibold ${isCorrect ? 'text-green-700' : 'text-red-700'}" style="font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize}px">
+                        ${isCorrect ? '✓ Betul!' : '✗ Tidak betul'}
+                    </p>
+                    ${!isCorrect ? `<p class="mt-2 text-green-700" style="font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize * 0.875}px">Jawapan yang betul: ${String.fromCharCode(65 + question.correct)}. ${question.options[question.correct]}</p>` : ''}
+                </div>
             `;
             
-            // Setup drag and drop semula
-            setupDragAndDrop();
-            setupTouchEvents();
-            
-            // Sembunyikan feedback
-            document.getElementById('feedback').style.display = 'none';
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = false;
+            nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            nextBtn.classList.add('hover:opacity-90');
         }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        async function showResults() {
+            if (isSubmitting) return;
+            
+            isSubmitting = true;
+            quizCompleted = true;
+            const percentage = Math.round((score / questions.length) * 100);
+            const config = window.elementSdk?.config || defaultConfig;
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseSize = config.font_size || defaultConfig.font_size;
+            const baseFontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+            
+            let emoji = '🌟';
+            let message = 'Cemerlang!';
+            if (percentage < 50) {
+                emoji = '💪';
+                message = 'Teruskan usaha!';
+            } else if (percentage < 75) {
+                emoji = '👍';
+                message = 'Bagus!';
+            }
+            
+            document.getElementById('app').innerHTML = `
+                <div class="question-card bg-white rounded-2xl shadow-xl p-8 fade-in celebration" style="background-color: ${config.surface_color || defaultConfig.surface_color}">
+                    <div class="text-center">
+                        <div class="text-7xl mb-4">${emoji}</div>
+                        <h2 id="result-title" class="font-bold mb-4" style="font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize * 2}px; color: ${config.text_color || defaultConfig.text_color}">${message}</h2>
+                        <p class="mb-2" style="font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize * 1.125}px; color: ${config.text_color || defaultConfig.text_color}">Tahniah!</p>
+                        
+                        <div class="my-8 p-6 rounded-xl" style="background-color: ${config.background_color || defaultConfig.background_color}">
+                            <p id="score-display" class="font-bold mb-2" style="font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize * 3}px; color: ${config.primary_action_color || defaultConfig.primary_action_color}">${score} / ${questions.length}</p>
+                            <p id="result-text" class="font-medium" style="font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize * 1.125}px; color: ${config.text_color || defaultConfig.text_color}">Peratusan: ${percentage}%</p>
+                        </div>
+                        
+                        <div id="save-message" class="mb-4 p-3 bg-blue-100 border-2 border-blue-400 text-blue-700 rounded-lg" style="font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize * 0.875}px">
+                            Menyimpan keputusan...
+                        </div>
+                        
+                        <button 
+                            onclick="restartQuiz()"
+                            class="primary-btn w-full text-white font-semibold py-4 rounded-lg hover:opacity-90 transition-opacity"
+                            style="background-color: ${config.primary_action_color || defaultConfig.primary_action_color}; font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize}px"
+                        >
+                            Cuba Lagi
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            const result = await window.dataSdk.create({
+                score: score,
+                total_questions: questions.length,
+                completed_at: new Date().toISOString()
+            });
+
+            const saveMessage = document.getElementById('save-message');
+            if (result.isOk) {
+                saveMessage.className = 'mb-4 p-3 bg-green-100 border-2 border-green-400 text-green-700 rounded-lg';
+                saveMessage.textContent = '✓ Keputusan anda telah disimpan!';
+                saveMessage.style.fontFamily = `${customFont}, ${baseFontStack}`;
+                saveMessage.style.fontSize = `${baseSize * 0.875}px`;
+            } else {
+                saveMessage.className = 'mb-4 p-3 bg-red-100 border-2 border-red-400 text-red-700 rounded-lg';
+                saveMessage.textContent = '✗ Gagal menyimpan keputusan. Sila cuba lagi.';
+                saveMessage.style.fontFamily = `${customFont}, ${baseFontStack}`;
+                saveMessage.style.fontSize = `${baseSize * 0.875}px`;
+            }
+            
+            isSubmitting = false;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answered = false;
+            quizCompleted = false;
+            renderQuestion();
+        }
+
+        async function init() {
+            const initResult = await window.dataSdk.init(dataHandler);
+            if (!initResult.isOk) {
+                console.error("Failed to initialize data SDK");
+            }
+
+            if (window.elementSdk) {
+                window.elementSdk.init({
+                    defaultConfig,
+                    onConfigChange,
+                    mapToCapabilities: (config) => ({
+                        recolorables: [
+                            {
+                                get: () => config.background_color || defaultConfig.background_color,
+                                set: (value) => {
+                                    config.background_color = value;
+                                    window.elementSdk.setConfig({ background_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.surface_color || defaultConfig.surface_color,
+                                set: (value) => {
+                                    config.surface_color = value;
+                                    window.elementSdk.setConfig({ surface_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.text_color || defaultConfig.text_color,
+                                set: (value) => {
+                                    config.text_color = value;
+                                    window.elementSdk.setConfig({ text_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                                set: (value) => {
+                                    config.primary_action_color = value;
+                                    window.elementSdk.setConfig({ primary_action_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+                                set: (value) => {
+                                    config.secondary_action_color = value;
+                                    window.elementSdk.setConfig({ secondary_action_color: value });
+                                }
+                            }
+                        ],
+                        borderables: [],
+                        fontEditable: {
+                            get: () => config.font_family || defaultConfig.font_family,
+                            set: (value) => {
+                                config.font_family = value;
+                                window.elementSdk.setConfig({ font_family: value });
+                            }
+                        },
+                        fontSizeable: {
+                            get: () => config.font_size || defaultConfig.font_size,
+                            set: (value) => {
+                                config.font_size = value;
+                                window.elementSdk.setConfig({ font_size: value });
+                            }
+                        }
+                    }),
+                    mapToEditPanelValues: (config) => new Map([
+                        ["quiz_title", config.quiz_title || defaultConfig.quiz_title],
+                        ["quiz_subtitle", config.quiz_subtitle || defaultConfig.quiz_subtitle]
+                    ])
+                });
+            }
+
+            renderQuestion();
+            await onConfigChange(window.elementSdk?.config || defaultConfig);
+        }
+
+        init();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9951ebca917ea559',t:'MTc2MTU2NTI1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a1c88b3d0be16ee',t:'MTc2MzY4OTgwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
